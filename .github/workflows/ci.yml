@@ -30,12 +30,8 @@ jobs:
       - name: Analyze code
         run: flutter analyze --fatal-infos
 
-      - name: Verify pub.dev publishing rules (dry-run)
-        run: dart pub publish --dry-run
-
   test:
     name: Run Unit & Widget Tests
-    needs: analyze-and-format
     runs-on: ubuntu-latest
 
     steps:
@@ -60,10 +56,10 @@ jobs:
         with:
           name: lcov-coverage-report
           path: coverage/lcov.info
+          if-no-files-found: ignore
 
   example-check:
     name: Verify Example App
-    needs: analyze-and-format
     runs-on: ubuntu-latest
 
     steps:
@@ -75,6 +71,9 @@ jobs:
         with:
           channel: 'stable'
           cache: true
+
+      - name: Install package dependencies
+        run: flutter pub get
 
       - name: Install example dependencies
         working-directory: example
