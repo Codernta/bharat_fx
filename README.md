@@ -7,6 +7,10 @@
 [![Flutter](https://img.shields.io/badge/Flutter-3.x%20%7C%20Dart%203.x-02569B.svg?logo=flutter)](https://flutter.dev)
 [![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg)](https://github.com/Codernta/bharat_fx)
 
+<p align="center">
+  <img src="https://raw.githubusercontent.com/Codernta/bharat_fx/main/assets/banner.jpg" alt="Bharat FX Banner" width="100%" style="border-radius: 8px;">
+</p>
+
 **`bharat_fx`** is a **lightweight, 100% dependency-free Flutter package** tailored specifically for the Indian market. Global packages often overlook the unique cultural, financial, and linguistic nuances of India. `bharat_fx` solves these India-specific pain points out of the box with zero external dependencies and zero API fees.
 
 ---
