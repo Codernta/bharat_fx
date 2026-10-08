@@ -1,0 +1,31 @@
+# Miscellaneous
+*.class
+*.log
+*.pyc
+*.swp
+.DS_Store
+.atom/
+.buildlog/
+.history
+.svn/
+migrate_working_dir/
+
+# IntelliJ related
+*.iml
+*.ipr
+*.iws
+.idea/
+**/.idea/
+
+# Flutter/Dart/Pub related
+pubspec.lock
+**/pubspec.lock
+**/doc/api/
+.dart_tool/
+**/.dart_tool/
+.flutter-plugins-dependencies
+**/.flutter-plugins-dependencies
+build/
+**/build/
+coverage/
+**/coverage/
