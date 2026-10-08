@@ -45,8 +45,7 @@ class _BharatPinCodeFormFieldState extends State<BharatPinCodeFormField> {
   @override
   void initState() {
     super.initState();
-    _controller =
-        widget.controller ??
+    _controller = widget.controller ??
         TextEditingController(text: widget.initialValue ?? '');
     _controller.addListener(_handleTextChange);
 
@@ -104,8 +103,7 @@ class _BharatPinCodeFormFieldState extends State<BharatPinCodeFormField> {
       suffixIcon: _resolvedInfo?.isValid == true
           ? const Icon(Icons.check_circle, color: Colors.green)
           : null,
-      helperText:
-          (widget.showResolvedInfoInline &&
+      helperText: (widget.showResolvedInfoInline &&
               _resolvedInfo != null &&
               _resolvedInfo!.isValid)
           ? '${_resolvedInfo!.district}, ${_resolvedInfo!.state}'
@@ -123,8 +121,7 @@ class _BharatPinCodeFormFieldState extends State<BharatPinCodeFormField> {
         LengthLimitingTextInputFormatter(6),
         BharatPinCodeInputFormatter(),
       ],
-      validator:
-          widget.validator ??
+      validator: widget.validator ??
           (value) {
             if (value == null || value.isEmpty) {
               return 'Please enter a PIN code';

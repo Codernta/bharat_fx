@@ -85,8 +85,7 @@ class _BharatTextFieldState extends State<BharatTextField> {
   @override
   void initState() {
     super.initState();
-    _controller =
-        widget.controller ??
+    _controller = widget.controller ??
         TextEditingController(text: widget.initialValue ?? '');
     _controller.addListener(_handleTextChange);
     if (_controller.text.isNotEmpty) {

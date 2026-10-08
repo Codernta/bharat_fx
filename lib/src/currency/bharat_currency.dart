@@ -58,9 +58,8 @@ class BharatCurrency {
     final formattedNumber = '$formattedWhole$decimalStr';
 
     final sign = isNegative ? '-' : '';
-    final symbolPrefix = showSymbol && symbol.isNotEmpty
-        ? '$symbol$spaceBetween'
-        : '';
+    final symbolPrefix =
+        showSymbol && symbol.isNotEmpty ? '$symbol$spaceBetween' : '';
 
     return '$sign$symbolPrefix$formattedNumber';
   }
@@ -123,9 +122,8 @@ class BharatCurrency {
     }
 
     final sign = isNegative ? '-' : '';
-    final symbolPrefix = showSymbol && symbol.isNotEmpty
-        ? '$symbol$spaceBetween'
-        : '';
+    final symbolPrefix =
+        showSymbol && symbol.isNotEmpty ? '$symbol$spaceBetween' : '';
     final unitSuffix = unit.isNotEmpty ? ' $unit' : '';
 
     return '$sign$symbolPrefix$formattedNumber$unitSuffix';
@@ -220,9 +218,8 @@ class BharatCurrency {
     final reversedChunks = remaining.split('').reversed.join('');
     final pairs = <String>[];
     for (int i = 0; i < reversedChunks.length; i += 2) {
-      final end = (i + 2 > reversedChunks.length)
-          ? reversedChunks.length
-          : i + 2;
+      final end =
+          (i + 2 > reversedChunks.length) ? reversedChunks.length : i + 2;
       pairs.add(reversedChunks.substring(i, end).split('').reversed.join(''));
     }
     final formattedHead = pairs.reversed.join(',');

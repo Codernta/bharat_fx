@@ -37,12 +37,10 @@ class BharatCurrencyText extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    final textStyle =
-        style ??
+    final textStyle = style ??
         theme.textTheme.headlineMedium ??
         const TextStyle(fontSize: 24);
-    final symStyle =
-        symbolStyle ??
+    final symStyle = symbolStyle ??
         textStyle.copyWith(
           fontWeight: FontWeight.bold,
           color: textStyle.color?.withValues(alpha: 0.85),
