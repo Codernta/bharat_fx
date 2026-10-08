@@ -91,7 +91,8 @@ class BharatPan {
       return PanValidationResult(
         pan: cleaned,
         isValid: false,
-        errorMessage: 'Invalid PAN structure. Expected: 5 letters, 4 digits, 1 letter',
+        errorMessage:
+            'Invalid PAN structure. Expected: 5 letters, 4 digits, 1 letter',
       );
     }
 

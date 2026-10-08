@@ -10,16 +10,37 @@ void main() {
       expect(BharatCurrency.format(999, showSymbol: false), '999');
       expect(BharatCurrency.format(1000, showSymbol: false), '1,000');
       expect(BharatCurrency.format(10000, showSymbol: false), '10,000');
-      expect(BharatCurrency.format(100000, showSymbol: false), '1,00,000'); // 1 Lakh
-      expect(BharatCurrency.format(1000000, showSymbol: false), '10,00,000'); // 10 Lakh
-      expect(BharatCurrency.format(10000000, showSymbol: false), '1,00,00,000'); // 1 Crore
-      expect(BharatCurrency.format(100000000, showSymbol: false), '10,00,00,000'); // 10 Crore
-      expect(BharatCurrency.format(1000000000, showSymbol: false), '1,00,00,00,000'); // 100 Crore / 1 Arab
-      expect(BharatCurrency.format(123456789, showSymbol: false), '12,34,56,789');
+      expect(
+        BharatCurrency.format(100000, showSymbol: false),
+        '1,00,000',
+      ); // 1 Lakh
+      expect(
+        BharatCurrency.format(1000000, showSymbol: false),
+        '10,00,000',
+      ); // 10 Lakh
+      expect(
+        BharatCurrency.format(10000000, showSymbol: false),
+        '1,00,00,000',
+      ); // 1 Crore
+      expect(
+        BharatCurrency.format(100000000, showSymbol: false),
+        '10,00,00,000',
+      ); // 10 Crore
+      expect(
+        BharatCurrency.format(1000000000, showSymbol: false),
+        '1,00,00,00,000',
+      ); // 100 Crore / 1 Arab
+      expect(
+        BharatCurrency.format(123456789, showSymbol: false),
+        '12,34,56,789',
+      );
     });
 
     test('formats with currency symbol and decimals', () {
-      expect(BharatCurrency.format(150000), '₹1,00,000'.replaceFirst('1,00,000', '1,50,000'));
+      expect(
+        BharatCurrency.format(150000),
+        '₹1,00,000'.replaceFirst('1,00,000', '1,50,000'),
+      );
       expect(BharatCurrency.format(150000, spaceBetween: ' '), '₹ 1,50,000');
       expect(BharatCurrency.format(1500.5, decimalDigits: 2), '₹1,500.50');
       expect(BharatCurrency.format(-100000), '-₹1,00,000');
@@ -29,9 +50,15 @@ void main() {
       expect(BharatCurrency.compact(500, showSymbol: false), '500');
       expect(BharatCurrency.compact(50000, showSymbol: false), '50 K');
       expect(BharatCurrency.compact(150000, showSymbol: false), '1.5 L');
-      expect(BharatCurrency.compact(150000, showSymbol: false, shortUnit: false), '1.5 Lakh');
+      expect(
+        BharatCurrency.compact(150000, showSymbol: false, shortUnit: false),
+        '1.5 Lakh',
+      );
       expect(BharatCurrency.compact(25000000, showSymbol: false), '2.5 Cr');
-      expect(BharatCurrency.compact(25000000, showSymbol: false, shortUnit: false), '2.5 Crore');
+      expect(
+        BharatCurrency.compact(25000000, showSymbol: false, shortUnit: false),
+        '2.5 Crore',
+      );
       expect(BharatCurrency.compact(1200000000, showSymbol: false), '1.2 Arab');
     });
 
@@ -46,10 +73,7 @@ void main() {
 
   group('BharatCurrency toWords in Indian Languages', () {
     test('converts numbers to English words (Indian scale)', () {
-      expect(
-        BharatCurrency.toWords(15000),
-        'Fifteen Thousand Rupees Only',
-      );
+      expect(BharatCurrency.toWords(15000), 'Fifteen Thousand Rupees Only');
       expect(
         BharatCurrency.toWords(100000, includeOnly: false),
         'One Lakh Rupees',
@@ -70,11 +94,19 @@ void main() {
         'पंद्रह हज़ार रुपये मात्र',
       );
       expect(
-        BharatCurrency.toWords(100000, language: BharatLanguage.hindi, includeOnly: false),
+        BharatCurrency.toWords(
+          100000,
+          language: BharatLanguage.hindi,
+          includeOnly: false,
+        ),
         'एक लाख रुपये',
       );
       expect(
-        BharatCurrency.toWords(20000000, language: BharatLanguage.hindi, includeOnly: false),
+        BharatCurrency.toWords(
+          20000000,
+          language: BharatLanguage.hindi,
+          includeOnly: false,
+        ),
         'दो करोड़ रुपये',
       );
     });

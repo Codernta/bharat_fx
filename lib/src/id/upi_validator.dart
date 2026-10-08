@@ -28,8 +28,9 @@ class UpiValidationResult {
 
 /// Validator and Payment Service Provider (PSP) resolver for Indian Unified Payments Interface (UPI) IDs.
 class BharatUpi {
-  static final RegExp _upiRegex =
-      RegExp(r'^[a-zA-Z0-9.\-_]{2,256}@[a-zA-Z]{2,64}$');
+  static final RegExp _upiRegex = RegExp(
+    r'^[a-zA-Z0-9.\-_]{2,256}@[a-zA-Z]{2,64}$',
+  );
 
   /// Known UPI handles and their associated PSP / Bank providers.
   static const Map<String, (String psp, String bank)> _knownHandles = {

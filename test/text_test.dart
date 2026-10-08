@@ -13,7 +13,10 @@ void main() {
 
     test('checks pure script text', () {
       expect(BharatText.isPure('नमस्ते भारत', IndianScript.devanagari), isTrue);
-      expect(BharatText.isPure('नमस्ते Hello', IndianScript.devanagari), isFalse);
+      expect(
+        BharatText.isPure('नमस्ते Hello', IndianScript.devanagari),
+        isFalse,
+      );
     });
 
     test('converts numbers to and from Indic digits', () {
@@ -21,18 +24,9 @@ void main() {
         BharatText.toIndicDigits('12345', IndianScript.devanagari),
         '१२३४५',
       );
-      expect(
-        BharatText.fromIndicDigits('१२३४५'),
-        '12345',
-      );
-      expect(
-        BharatText.toIndicDigits('987', IndianScript.tamil),
-        '௯௮௭',
-      );
-      expect(
-        BharatText.fromIndicDigits('௯௮௭'),
-        '987',
-      );
+      expect(BharatText.fromIndicDigits('१२३४५'), '12345');
+      expect(BharatText.toIndicDigits('987', IndianScript.tamil), '௯௮௭');
+      expect(BharatText.fromIndicDigits('௯௮௭'), '987');
     });
   });
 
@@ -42,7 +36,10 @@ void main() {
       expect(BharatTransliterator.transliterate('bharat'), 'भारत');
       expect(BharatTransliterator.transliterate('shanti'), 'शांति');
       expect(BharatTransliterator.transliterate('dost'), 'दोस्त');
-      expect(BharatTransliterator.transliterate('mera desh mahan'), 'मेरा देश महान');
+      expect(
+        BharatTransliterator.transliterate('mera desh mahan'),
+        'मेरा देश महान',
+      );
     });
 
     test('transliterates phonetic syllables into Devanagari', () {

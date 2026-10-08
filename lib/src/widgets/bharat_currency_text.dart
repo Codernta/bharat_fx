@@ -37,8 +37,12 @@ class BharatCurrencyText extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    final textStyle = style ?? theme.textTheme.headlineMedium ?? const TextStyle(fontSize: 24);
-    final symStyle = symbolStyle ??
+    final textStyle =
+        style ??
+        theme.textTheme.headlineMedium ??
+        const TextStyle(fontSize: 24);
+    final symStyle =
+        symbolStyle ??
         textStyle.copyWith(
           fontWeight: FontWeight.bold,
           color: textStyle.color?.withValues(alpha: 0.85),
@@ -59,10 +63,7 @@ class BharatCurrencyText extends StatelessWidget {
             decimalDigits: decimalDigits,
           );
 
-    final words = BharatCurrency.toWords(
-      amount,
-      language: wordsLanguage,
-    );
+    final words = BharatCurrency.toWords(amount, language: wordsLanguage);
 
     Widget content = Row(
       mainAxisSize: MainAxisSize.min,
@@ -78,10 +79,7 @@ class BharatCurrencyText extends StatelessWidget {
     );
 
     if (showWordsTooltip) {
-      content = Tooltip(
-        message: words,
-        child: content,
-      );
+      content = Tooltip(message: words, child: content);
     }
 
     if (showWordsSubtitle) {

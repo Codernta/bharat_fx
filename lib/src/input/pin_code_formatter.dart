@@ -24,8 +24,7 @@ class BharatPinCodeInputFormatter extends TextInputFormatter {
       );
     }
 
-    final formatted =
-        '${truncated.substring(0, 3)} ${truncated.substring(3)}';
+    final formatted = '${truncated.substring(0, 3)} ${truncated.substring(3)}';
 
     return TextEditingValue(
       text: formatted,

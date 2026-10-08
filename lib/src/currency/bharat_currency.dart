@@ -58,8 +58,9 @@ class BharatCurrency {
     final formattedNumber = '$formattedWhole$decimalStr';
 
     final sign = isNegative ? '-' : '';
-    final symbolPrefix =
-        showSymbol && symbol.isNotEmpty ? '$symbol$spaceBetween' : '';
+    final symbolPrefix = showSymbol && symbol.isNotEmpty
+        ? '$symbol$spaceBetween'
+        : '';
 
     return '$sign$symbolPrefix$formattedNumber';
   }
@@ -122,8 +123,9 @@ class BharatCurrency {
     }
 
     final sign = isNegative ? '-' : '';
-    final symbolPrefix =
-        showSymbol && symbol.isNotEmpty ? '$symbol$spaceBetween' : '';
+    final symbolPrefix = showSymbol && symbol.isNotEmpty
+        ? '$symbol$spaceBetween'
+        : '';
     final unitSuffix = unit.isNotEmpty ? ' $unit' : '';
 
     return '$sign$symbolPrefix$formattedNumber$unitSuffix';
@@ -173,22 +175,13 @@ class BharatCurrency {
       cleaned = cleaned.replaceAll('arab', '').trim();
     } else if (cleaned.contains('cr') || cleaned.contains('crore')) {
       multiplier = 10000000.0;
-      cleaned = cleaned
-          .replaceAll('crore', '')
-          .replaceAll('cr', '')
-          .trim();
+      cleaned = cleaned.replaceAll('crore', '').replaceAll('cr', '').trim();
     } else if (cleaned.contains('lakh') || cleaned.contains('l')) {
       multiplier = 100000.0;
-      cleaned = cleaned
-          .replaceAll('lakh', '')
-          .replaceAll('l', '')
-          .trim();
+      cleaned = cleaned.replaceAll('lakh', '').replaceAll('l', '').trim();
     } else if (cleaned.contains('thousand') || cleaned.contains('k')) {
       multiplier = 1000.0;
-      cleaned = cleaned
-          .replaceAll('thousand', '')
-          .replaceAll('k', '')
-          .trim();
+      cleaned = cleaned.replaceAll('thousand', '').replaceAll('k', '').trim();
     }
 
     // Remove commas and spaces
@@ -208,10 +201,8 @@ class BharatCurrency {
     }
 
     // Last 3 digits
-    final lastThree =
-        integerDigits.substring(integerDigits.length - 3);
-    final remaining =
-        integerDigits.substring(0, integerDigits.length - 3);
+    final lastThree = integerDigits.substring(integerDigits.length - 3);
+    final remaining = integerDigits.substring(0, integerDigits.length - 3);
 
     // Group remaining into pairs of 2 from right to left
     final buffer = StringBuffer();
@@ -226,13 +217,12 @@ class BharatCurrency {
     }
 
     // Reconstruct
-    final reversedChunks = remaining
-        .split('')
-        .reversed
-        .join('');
+    final reversedChunks = remaining.split('').reversed.join('');
     final pairs = <String>[];
     for (int i = 0; i < reversedChunks.length; i += 2) {
-      final end = (i + 2 > reversedChunks.length) ? reversedChunks.length : i + 2;
+      final end = (i + 2 > reversedChunks.length)
+          ? reversedChunks.length
+          : i + 2;
       pairs.add(reversedChunks.substring(i, end).split('').reversed.join(''));
     }
     final formattedHead = pairs.reversed.join(',');

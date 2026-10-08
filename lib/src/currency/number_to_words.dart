@@ -48,16 +48,14 @@ class BharatNumberToWords {
 
     // Currency suffix for main amount
     if (includeCurrency && wholePart > 0) {
-      final rupeeWord =
-          wholePart == 1 ? dict.rupeeSingular : dict.rupeePlural;
+      final rupeeWord = wholePart == 1 ? dict.rupeeSingular : dict.rupeePlural;
       parts.add(rupeeWord);
     }
 
     // Decimal / Paise part
     if (includePaise && paisePart > 0) {
       final paiseWords = dict.getUnderHundred(paisePart);
-      final paiseUnit =
-          paisePart == 1 ? dict.paiseSingular : dict.paisePlural;
+      final paiseUnit = paisePart == 1 ? dict.paiseSingular : dict.paisePlural;
       if (parts.isNotEmpty) {
         parts.add(dict.andWord);
       }

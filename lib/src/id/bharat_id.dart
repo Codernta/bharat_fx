@@ -19,12 +19,11 @@ class BharatId {
     String? pan, {
     PanCategory? expectedCategory,
     String? surnameInitial,
-  }) =>
-      BharatPan.validate(
-        pan,
-        expectedCategory: expectedCategory,
-        surnameInitial: surnameInitial,
-      );
+  }) => BharatPan.validate(
+    pan,
+    expectedCategory: expectedCategory,
+    surnameInitial: surnameInitial,
+  );
 
   /// Masks a PAN card to `XXXXXX1234F`.
   static String maskPan(String pan, {String maskChar = 'X'}) =>

@@ -196,8 +196,7 @@ class BharatTransliterator {
         _commonDevanagari.containsKey(lower)) {
       return _commonDevanagari[lower]!;
     }
-    if (targetScript == IndianScript.tamil &&
-        _commonTamil.containsKey(lower)) {
+    if (targetScript == IndianScript.tamil && _commonTamil.containsKey(lower)) {
       return _commonTamil[lower]!;
     }
     if (targetScript == IndianScript.telugu &&
@@ -226,7 +225,22 @@ class BharatTransliterator {
     while (i < text.length) {
       // Check multi-char consonants first (e.g. ksh, chh, kh, etc.)
       String? matchedConsonantKey;
-      for (final key in ['ksh', 'chh', 'shh', 'kh', 'gh', 'ch', 'jh', 'th', 'dh', 'ph', 'bh', 'sh', 'tr', 'gy']) {
+      for (final key in [
+        'ksh',
+        'chh',
+        'shh',
+        'kh',
+        'gh',
+        'ch',
+        'jh',
+        'th',
+        'dh',
+        'ph',
+        'bh',
+        'sh',
+        'tr',
+        'gy',
+      ]) {
         if (text.startsWith(key, i)) {
           matchedConsonantKey = key;
           break;
@@ -247,7 +261,21 @@ class BharatTransliterator {
 
         // Check if immediately followed by a vowel
         String? matchedVowelKey;
-        for (final vKey in ['aa', 'ai', 'au', 'ee', 'ii', 'oo', 'uu', 'ri', 'a', 'i', 'u', 'e', 'o']) {
+        for (final vKey in [
+          'aa',
+          'ai',
+          'au',
+          'ee',
+          'ii',
+          'oo',
+          'uu',
+          'ri',
+          'a',
+          'i',
+          'u',
+          'e',
+          'o',
+        ]) {
           if (text.startsWith(vKey, i)) {
             matchedVowelKey = vKey;
             break;
@@ -272,7 +300,21 @@ class BharatTransliterator {
       } else {
         // Not a consonant: check standalone vowel
         String? matchedVowelKey;
-        for (final vKey in ['aa', 'ai', 'au', 'ee', 'ii', 'oo', 'uu', 'ri', 'a', 'i', 'u', 'e', 'o']) {
+        for (final vKey in [
+          'aa',
+          'ai',
+          'au',
+          'ee',
+          'ii',
+          'oo',
+          'uu',
+          'ri',
+          'a',
+          'i',
+          'u',
+          'e',
+          'o',
+        ]) {
           if (text.startsWith(vKey, i)) {
             matchedVowelKey = vKey;
             break;

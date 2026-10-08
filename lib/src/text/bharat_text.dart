@@ -13,13 +13,12 @@ class BharatText {
     IndianScript script, {
     bool allowWhitespace = true,
     bool allowPunctuation = true,
-  }) =>
-      BharatScriptDetector.isPureScript(
-        text,
-        script,
-        allowWhitespace: allowWhitespace,
-        allowPunctuation: allowPunctuation,
-      );
+  }) => BharatScriptDetector.isPureScript(
+    text,
+    script,
+    allowWhitespace: allowWhitespace,
+    allowPunctuation: allowPunctuation,
+  );
 
   /// Converts standard numbers (0-9) to native Indic script digits (e.g. 123 -> १२३).
   static String toIndicDigits(String text, IndianScript script) =>
@@ -33,6 +32,5 @@ class BharatText {
   static String transliterate(
     String text, {
     IndianScript targetScript = IndianScript.devanagari,
-  }) =>
-      BharatTransliterator.transliterate(text, targetScript: targetScript);
+  }) => BharatTransliterator.transliterate(text, targetScript: targetScript);
 }

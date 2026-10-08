@@ -26,8 +26,9 @@ class BharatVehiclePlateWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final validated = BharatVehicle.validate(plateNumber);
-    final displayText =
-        validated.isValid ? validated.formattedNumber : plateNumber.toUpperCase();
+    final displayText = validated.isValid
+        ? validated.formattedNumber
+        : plateNumber.toUpperCase();
 
     // Determine plate background and foreground color
     Color backgroundColor;
@@ -75,11 +76,7 @@ class BharatVehiclePlateWidget extends StatelessWidget {
         borderRadius: BorderRadius.circular(height * 0.12),
         border: Border.all(color: borderColor, width: 2.2),
         boxShadow: const [
-          BoxShadow(
-            color: Colors.black26,
-            blurRadius: 4,
-            offset: Offset(0, 2),
-          ),
+          BoxShadow(color: Colors.black26, blurRadius: 4, offset: Offset(0, 2)),
         ],
       ),
       child: ClipRRect(

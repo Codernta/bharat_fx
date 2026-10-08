@@ -39,8 +39,13 @@ class BharatPanInputFormatter extends TextInputFormatter {
   ) {
     if (newValue.text.isEmpty) return newValue;
 
-    final uppercase = newValue.text.toUpperCase().replaceAll(RegExp(r'[^A-Z0-9]'), '');
-    final truncated = uppercase.length > 10 ? uppercase.substring(0, 10) : uppercase;
+    final uppercase = newValue.text.toUpperCase().replaceAll(
+      RegExp(r'[^A-Z0-9]'),
+      '',
+    );
+    final truncated = uppercase.length > 10
+        ? uppercase.substring(0, 10)
+        : uppercase;
 
     return TextEditingValue(
       text: truncated,
@@ -59,9 +64,10 @@ class BharatUpiInputFormatter extends TextInputFormatter {
   ) {
     if (newValue.text.isEmpty) return newValue;
 
-    final cleaned = newValue.text
-        .toLowerCase()
-        .replaceAll(RegExp(r'[^a-z0-9.\-_@]'), '');
+    final cleaned = newValue.text.toLowerCase().replaceAll(
+      RegExp(r'[^a-z0-9.\-_@]'),
+      '',
+    );
 
     return TextEditingValue(
       text: cleaned,
@@ -79,8 +85,13 @@ class BharatGstinInputFormatter extends TextInputFormatter {
   ) {
     if (newValue.text.isEmpty) return newValue;
 
-    final uppercase = newValue.text.toUpperCase().replaceAll(RegExp(r'[^A-Z0-9]'), '');
-    final truncated = uppercase.length > 15 ? uppercase.substring(0, 15) : uppercase;
+    final uppercase = newValue.text.toUpperCase().replaceAll(
+      RegExp(r'[^A-Z0-9]'),
+      '',
+    );
+    final truncated = uppercase.length > 15
+        ? uppercase.substring(0, 15)
+        : uppercase;
 
     return TextEditingValue(
       text: truncated,
@@ -98,8 +109,13 @@ class BharatIfscInputFormatter extends TextInputFormatter {
   ) {
     if (newValue.text.isEmpty) return newValue;
 
-    final uppercase = newValue.text.toUpperCase().replaceAll(RegExp(r'[^A-Z0-9]'), '');
-    final truncated = uppercase.length > 11 ? uppercase.substring(0, 11) : uppercase;
+    final uppercase = newValue.text.toUpperCase().replaceAll(
+      RegExp(r'[^A-Z0-9]'),
+      '',
+    );
+    final truncated = uppercase.length > 11
+        ? uppercase.substring(0, 11)
+        : uppercase;
 
     return TextEditingValue(
       text: truncated,
@@ -127,8 +143,7 @@ class BharatPhoneInputFormatter extends TextInputFormatter {
       );
     }
 
-    final formatted =
-        '${truncated.substring(0, 5)} ${truncated.substring(5)}';
+    final formatted = '${truncated.substring(0, 5)} ${truncated.substring(5)}';
 
     return TextEditingValue(
       text: formatted,

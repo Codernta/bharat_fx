@@ -27,13 +27,15 @@ class PinCodeInfo {
 /// Offline lookup tables for Indian PIN codes.
 class BharatPinCodeData {
   static const Map<String, String> zones = {
-    '1': 'Northern Postal Zone (Delhi, Haryana, Punjab, HP, J&K, Ladakh, Chandigarh)',
+    '1':
+        'Northern Postal Zone (Delhi, Haryana, Punjab, HP, J&K, Ladakh, Chandigarh)',
     '2': 'Northern Postal Zone (Uttar Pradesh, Uttarakhand)',
     '3': 'Western Postal Zone (Rajasthan, Gujarat, Daman & Diu, DNH)',
     '4': 'Western Postal Zone (Maharashtra, Goa, MP, Chhattisgarh)',
     '5': 'Southern Postal Zone (Andhra Pradesh, Telangana, Karnataka)',
     '6': 'Southern Postal Zone (Tamil Nadu, Kerala, Puducherry, Lakshadweep)',
-    '7': 'Eastern Postal Zone (West Bengal, Odisha, North-East, Andaman & Nicobar)',
+    '7':
+        'Eastern Postal Zone (West Bengal, Odisha, North-East, Andaman & Nicobar)',
     '8': 'Eastern Postal Zone (Bihar, Jharkhand)',
     '9': 'Army Postal Service (APS)',
   };
@@ -177,7 +179,10 @@ class BharatPinCodeData {
     '194': {'district': 'Leh', 'state': 'Ladakh'},
 
     // Uttar Pradesh & Uttarakhand
-    '201': {'district': 'Ghaziabad / Gautam Buddha Nagar (Noida)', 'state': 'Uttar Pradesh'},
+    '201': {
+      'district': 'Ghaziabad / Gautam Buddha Nagar (Noida)',
+      'state': 'Uttar Pradesh',
+    },
     '202': {'district': 'Aligarh', 'state': 'Uttar Pradesh'},
     '203': {'district': 'Bulandshahr', 'state': 'Uttar Pradesh'},
     '204': {'district': 'Hathras', 'state': 'Uttar Pradesh'},
@@ -272,10 +277,16 @@ class BharatPinCodeData {
     '393': {'district': 'Ankleshwar / Narmada', 'state': 'Gujarat'},
     '394': {'district': 'Surat Rural / Tapi', 'state': 'Gujarat'},
     '395': {'district': 'Surat City', 'state': 'Gujarat'},
-    '396': {'district': 'Valsad / Daman / Dadra & Nagar Haveli', 'state': 'Gujarat'},
+    '396': {
+      'district': 'Valsad / Daman / Dadra & Nagar Haveli',
+      'state': 'Gujarat',
+    },
 
     // Maharashtra & Goa
-    '400': {'district': 'Mumbai City / Mumbai Suburban', 'state': 'Maharashtra'},
+    '400': {
+      'district': 'Mumbai City / Mumbai Suburban',
+      'state': 'Maharashtra',
+    },
     '401': {'district': 'Thane / Palghar', 'state': 'Maharashtra'},
     '402': {'district': 'Raigad', 'state': 'Maharashtra'},
     '403': {'district': 'North Goa / South Goa', 'state': 'Goa'},
@@ -285,15 +296,24 @@ class BharatPinCodeData {
     '413': {'district': 'Solapur', 'state': 'Maharashtra'},
     '414': {'district': 'Ahmednagar', 'state': 'Maharashtra'},
     '415': {'district': 'Satara / Ratnagiri', 'state': 'Maharashtra'},
-    '416': {'district': 'Kolhapur / Sangli / Sindhudurg', 'state': 'Maharashtra'},
+    '416': {
+      'district': 'Kolhapur / Sangli / Sindhudurg',
+      'state': 'Maharashtra',
+    },
     '421': {'district': 'Kalyan / Dombivli / Thane', 'state': 'Maharashtra'},
     '422': {'district': 'Nashik', 'state': 'Maharashtra'},
     '423': {'district': 'Malegaon / Nashik Rural', 'state': 'Maharashtra'},
     '424': {'district': 'Dhule', 'state': 'Maharashtra'},
     '425': {'district': 'Jalgaon', 'state': 'Maharashtra'},
-    '431': {'district': 'Chhatrapati Sambhajinagar (Aurangabad) / Jalna', 'state': 'Maharashtra'},
+    '431': {
+      'district': 'Chhatrapati Sambhajinagar (Aurangabad) / Jalna',
+      'state': 'Maharashtra',
+    },
     '440': {'district': 'Nagpur City', 'state': 'Maharashtra'},
-    '441': {'district': 'Nagpur Rural / Bhandara / Gondia', 'state': 'Maharashtra'},
+    '441': {
+      'district': 'Nagpur Rural / Bhandara / Gondia',
+      'state': 'Maharashtra',
+    },
     '442': {'district': 'Wardha / Chandrapur', 'state': 'Maharashtra'},
     '443': {'district': 'Buldhana', 'state': 'Maharashtra'},
     '444': {'district': 'Amravati / Akola', 'state': 'Maharashtra'},
@@ -346,7 +366,10 @@ class BharatPinCodeData {
     '507': {'district': 'Khammam', 'state': 'Telangana'},
     '508': {'district': 'Nalgonda / Suryapet', 'state': 'Telangana'},
     '509': {'district': 'Mahabubnagar', 'state': 'Telangana'},
-    '515': {'district': 'Anantapur / Sri Sathya Sai', 'state': 'Andhra Pradesh'},
+    '515': {
+      'district': 'Anantapur / Sri Sathya Sai',
+      'state': 'Andhra Pradesh',
+    },
     '516': {'district': 'YSR Kadapa', 'state': 'Andhra Pradesh'},
     '517': {'district': 'Tirupati / Chittoor', 'state': 'Andhra Pradesh'},
     '518': {'district': 'Kurnool / Nandyal', 'state': 'Andhra Pradesh'},
@@ -364,17 +387,29 @@ class BharatPinCodeData {
 
     // Karnataka
     '560': {'district': 'Bengaluru Urban', 'state': 'Karnataka'},
-    '561': {'district': 'Bengaluru Rural / Chikkaballapur', 'state': 'Karnataka'},
+    '561': {
+      'district': 'Bengaluru Rural / Chikkaballapur',
+      'state': 'Karnataka',
+    },
     '562': {'district': 'Ramanagara / Kanakapura', 'state': 'Karnataka'},
     '563': {'district': 'Kolar (KGF)', 'state': 'Karnataka'},
     '570': {'district': 'Mysuru', 'state': 'Karnataka'},
-    '571': {'district': 'Mandya / Chamarajanagar / Kodagu', 'state': 'Karnataka'},
+    '571': {
+      'district': 'Mandya / Chamarajanagar / Kodagu',
+      'state': 'Karnataka',
+    },
     '572': {'district': 'Tumakuru', 'state': 'Karnataka'},
     '573': {'district': 'Hassan', 'state': 'Karnataka'},
-    '574': {'district': 'Dakshina Kannada (Puttur/Bantwal)', 'state': 'Karnataka'},
+    '574': {
+      'district': 'Dakshina Kannada (Puttur/Bantwal)',
+      'state': 'Karnataka',
+    },
     '575': {'district': 'Mangaluru', 'state': 'Karnataka'},
     '576': {'district': 'Udupi / Kundapura', 'state': 'Karnataka'},
-    '577': {'district': 'Shivamogga / Davanagere / Chikkamagaluru', 'state': 'Karnataka'},
+    '577': {
+      'district': 'Shivamogga / Davanagere / Chikkamagaluru',
+      'state': 'Karnataka',
+    },
     '580': {'district': 'Hubballi-Dharwad', 'state': 'Karnataka'},
     '581': {'district': 'Uttara Kannada (Karwar/Sirsi)', 'state': 'Karnataka'},
     '582': {'district': 'Gadag', 'state': 'Karnataka'},
@@ -445,21 +480,36 @@ class BharatPinCodeData {
     '700': {'district': 'Kolkata', 'state': 'West Bengal'},
     '711': {'district': 'Howrah', 'state': 'West Bengal'},
     '712': {'district': 'Hooghly', 'state': 'West Bengal'},
-    '713': {'district': 'Paschim Bardhaman (Durgapur/Asansol)', 'state': 'West Bengal'},
+    '713': {
+      'district': 'Paschim Bardhaman (Durgapur/Asansol)',
+      'state': 'West Bengal',
+    },
     '721': {'district': 'Paschim Medinipur / Jhargram', 'state': 'West Bengal'},
     '722': {'district': 'Bankura', 'state': 'West Bengal'},
     '723': {'district': 'Purulia', 'state': 'West Bengal'},
     '731': {'district': 'Birbhum', 'state': 'West Bengal'},
     '732': {'district': 'Malda', 'state': 'West Bengal'},
-    '733': {'district': 'Uttar Dinajpur / Dakshin Dinajpur', 'state': 'West Bengal'},
+    '733': {
+      'district': 'Uttar Dinajpur / Dakshin Dinajpur',
+      'state': 'West Bengal',
+    },
     '734': {'district': 'Darjeeling / Siliguri', 'state': 'West Bengal'},
     '735': {'district': 'Jalpaiguri / Alipurduar', 'state': 'West Bengal'},
     '736': {'district': 'Cooch Behar', 'state': 'West Bengal'},
-    '737': {'district': 'East Sikkim (Gangtok) / South Sikkim', 'state': 'Sikkim'},
+    '737': {
+      'district': 'East Sikkim (Gangtok) / South Sikkim',
+      'state': 'Sikkim',
+    },
     '741': {'district': 'Nadia', 'state': 'West Bengal'},
     '742': {'district': 'Murshidabad', 'state': 'West Bengal'},
-    '743': {'district': 'North 24 Parganas / South 24 Parganas', 'state': 'West Bengal'},
-    '744': {'district': 'South Andaman (Port Blair) / Nicobar', 'state': 'Andaman & Nicobar Islands'},
+    '743': {
+      'district': 'North 24 Parganas / South 24 Parganas',
+      'state': 'West Bengal',
+    },
+    '744': {
+      'district': 'South Andaman (Port Blair) / Nicobar',
+      'state': 'Andaman & Nicobar Islands',
+    },
 
     // Odisha
     '751': {'district': 'Khurda (Bhubaneswar)', 'state': 'Odisha'},
@@ -533,14 +583,20 @@ class BharatPinCodeData {
     '842': {'district': 'Muzaffarpur', 'state': 'Bihar'},
     '843': {'district': 'Sitamarhi / Sheohar', 'state': 'Bihar'},
     '844': {'district': 'Vaishali (Hajipur)', 'state': 'Bihar'},
-    '845': {'district': 'East Champaran (Motihari) / West Champaran (Bettiah)', 'state': 'Bihar'},
+    '845': {
+      'district': 'East Champaran (Motihari) / West Champaran (Bettiah)',
+      'state': 'Bihar',
+    },
     '846': {'district': 'Darbhanga', 'state': 'Bihar'},
     '847': {'district': 'Madhubani', 'state': 'Bihar'},
     '848': {'district': 'Samastipur', 'state': 'Bihar'},
     '851': {'district': 'Begusarai', 'state': 'Bihar'},
     '852': {'district': 'Saharsa / Madhepura / Supaul', 'state': 'Bihar'},
     '853': {'district': 'Khagaria', 'state': 'Bihar'},
-    '854': {'district': 'Purnia / Katihar / Araria / Kishanganj', 'state': 'Bihar'},
+    '854': {
+      'district': 'Purnia / Katihar / Araria / Kishanganj',
+      'state': 'Bihar',
+    },
     '855': {'district': 'Kishanganj', 'state': 'Bihar'},
   };
 }

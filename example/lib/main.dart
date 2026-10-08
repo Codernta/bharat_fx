@@ -160,8 +160,10 @@ class _CurrencyShowcaseState extends State<CurrencyShowcase> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                const Text('Indian Grouping Format (Lakh / Crore):',
-                    style: TextStyle(fontWeight: FontWeight.bold)),
+                const Text(
+                  'Indian Grouping Format (Lakh / Crore):',
+                  style: TextStyle(fontWeight: FontWeight.bold),
+                ),
                 const SizedBox(height: 8),
                 BharatCurrencyText(
                   _currentAmount,
@@ -172,8 +174,10 @@ class _CurrencyShowcaseState extends State<CurrencyShowcase> {
                   ),
                 ),
                 const Divider(height: 24),
-                const Text('Compact Notation:',
-                    style: TextStyle(fontWeight: FontWeight.bold)),
+                const Text(
+                  'Compact Notation:',
+                  style: TextStyle(fontWeight: FontWeight.bold),
+                ),
                 const SizedBox(height: 6),
                 Text(
                   'Short: ${BharatCurrency.compact(_currentAmount)}  |  Full: ${BharatCurrency.compact(_currentAmount, shortUnit: false)}',
@@ -183,8 +187,10 @@ class _CurrencyShowcaseState extends State<CurrencyShowcase> {
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    const Text('Number in Words:',
-                        style: TextStyle(fontWeight: FontWeight.bold)),
+                    const Text(
+                      'Number in Words:',
+                      style: TextStyle(fontWeight: FontWeight.bold),
+                    ),
                     DropdownButton<BharatLanguage>(
                       value: _selectedLanguage,
                       items: BharatLanguage.values.map((lang) {
@@ -193,8 +199,9 @@ class _CurrencyShowcaseState extends State<CurrencyShowcase> {
                           child: Text(lang.name.toUpperCase()),
                         );
                       }).toList(),
-                      onChanged: (l) =>
-                          setState(() => _selectedLanguage = l ?? BharatLanguage.english),
+                      onChanged: (l) => setState(
+                        () => _selectedLanguage = l ?? BharatLanguage.english,
+                      ),
                     ),
                   ],
                 ),
@@ -291,12 +298,16 @@ class _PinCodeShowcaseState extends State<PinCodeShowcase> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  const Text('Resolved Offline Details:',
-                      style: TextStyle(fontWeight: FontWeight.bold)),
+                  const Text(
+                    'Resolved Offline Details:',
+                    style: TextStyle(fontWeight: FontWeight.bold),
+                  ),
                   const SizedBox(height: 6),
                   Text('Zone: ${_info!.zone ?? "N/A"}'),
                   Text('Circle: ${_info!.circle ?? "N/A"}'),
-                  Text('Army Postal: ${_info!.isArmyPostal ? "Yes (APS)" : "No"}'),
+                  Text(
+                    'Army Postal: ${_info!.isArmyPostal ? "Yes (APS)" : "No"}',
+                  ),
                 ],
               ),
             ),
@@ -340,14 +351,18 @@ class _VernacularShowcaseState extends State<VernacularShowcase> {
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            const Text('Select Target Script:',
-                style: TextStyle(fontWeight: FontWeight.bold)),
+            const Text(
+              'Select Target Script:',
+              style: TextStyle(fontWeight: FontWeight.bold),
+            ),
             DropdownButton<IndianScript>(
               value: _selectedScript,
               items: IndianScript.values.map((s) {
                 return DropdownMenuItem(value: s, child: Text(s.name));
               }).toList(),
-              onChanged: (s) => setState(() => _selectedScript = s ?? IndianScript.devanagari),
+              onChanged: (s) => setState(
+                () => _selectedScript = s ?? IndianScript.devanagari,
+              ),
             ),
           ],
         ),
@@ -395,8 +410,14 @@ class _VernacularShowcaseState extends State<VernacularShowcase> {
                 ),
                 const SizedBox(height: 8),
                 Text(
-                  BharatText.toIndicDigits(_digitsController.text, _selectedScript),
-                  style: const TextStyle(fontSize: 26, fontWeight: FontWeight.bold),
+                  BharatText.toIndicDigits(
+                    _digitsController.text,
+                    _selectedScript,
+                  ),
+                  style: const TextStyle(
+                    fontSize: 26,
+                    fontWeight: FontWeight.bold,
+                  ),
                 ),
               ],
             ),
@@ -466,22 +487,30 @@ class _VehicleShowcaseState extends State<VehicleShowcase> {
             ChoiceChip(
               label: const Text('Private (White)'),
               selected: _category == VehiclePlateCategory.privateVehicle,
-              onSelected: (_) => setState(() => _category = VehiclePlateCategory.privateVehicle),
+              onSelected: (_) => setState(
+                () => _category = VehiclePlateCategory.privateVehicle,
+              ),
             ),
             ChoiceChip(
               label: const Text('Commercial (Yellow)'),
               selected: _category == VehiclePlateCategory.commercialVehicle,
-              onSelected: (_) => setState(() => _category = VehiclePlateCategory.commercialVehicle),
+              onSelected: (_) => setState(
+                () => _category = VehiclePlateCategory.commercialVehicle,
+              ),
             ),
             ChoiceChip(
               label: const Text('EV (Green)'),
               selected: _category == VehiclePlateCategory.electricVehicle,
-              onSelected: (_) => setState(() => _category = VehiclePlateCategory.electricVehicle),
+              onSelected: (_) => setState(
+                () => _category = VehiclePlateCategory.electricVehicle,
+              ),
             ),
             ChoiceChip(
               label: const Text('Rental (Black)'),
               selected: _category == VehiclePlateCategory.rentalVehicle,
-              onSelected: (_) => setState(() => _category = VehiclePlateCategory.rentalVehicle),
+              onSelected: (_) => setState(
+                () => _category = VehiclePlateCategory.rentalVehicle,
+              ),
             ),
           ],
         ),
@@ -508,12 +537,18 @@ class _VehicleShowcaseState extends State<VehicleShowcase> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  const Text('Extracted Registration Details:',
-                      style: TextStyle(fontWeight: FontWeight.bold)),
+                  const Text(
+                    'Extracted Registration Details:',
+                    style: TextStyle(fontWeight: FontWeight.bold),
+                  ),
                   const SizedBox(height: 8),
-                  Text('State: ${_plateInfo!.stateName} (${_plateInfo!.stateCode})'),
+                  Text(
+                    'State: ${_plateInfo!.stateName} (${_plateInfo!.stateCode})',
+                  ),
                   if (_plateInfo!.rtoName != null)
-                    Text('RTO: ${_plateInfo!.rtoName} (Code: ${_plateInfo!.rtoCode})'),
+                    Text(
+                      'RTO: ${_plateInfo!.rtoName} (Code: ${_plateInfo!.rtoCode})',
+                    ),
                   Text('Series: ${_plateInfo!.series ?? "None"}'),
                   Text('Number: ${_plateInfo!.registrationNumber}'),
                   Text('Plate Type: ${_plateInfo!.type.name}'),
@@ -553,40 +588,40 @@ class _IdShowcaseState extends State<IdShowcase> {
           'PAN Card (with entity category classification), and UPI IDs (with bank/PSP detection).',
         ),
         const SizedBox(height: 20),
-        const Text('Aadhaar Card (12 Digits with Verhoeff Checksum):',
-            style: TextStyle(fontWeight: FontWeight.bold)),
-        const SizedBox(height: 8),
-        const BharatTextField(
-          type: BharatTextFieldType.aadhaar,
+        const Text(
+          'Aadhaar Card (12 Digits with Verhoeff Checksum):',
+          style: TextStyle(fontWeight: FontWeight.bold),
         ),
+        const SizedBox(height: 8),
+        const BharatTextField(type: BharatTextFieldType.aadhaar),
         const SizedBox(height: 20),
-        const Text('PAN Card (4th Char Entity Classifier):',
-            style: TextStyle(fontWeight: FontWeight.bold)),
-        const SizedBox(height: 8),
-        const BharatTextField(
-          type: BharatTextFieldType.pan,
+        const Text(
+          'PAN Card (4th Char Entity Classifier):',
+          style: TextStyle(fontWeight: FontWeight.bold),
         ),
+        const SizedBox(height: 8),
+        const BharatTextField(type: BharatTextFieldType.pan),
         const SizedBox(height: 20),
-        const Text('UPI ID (Auto PSP & Bank Detector):',
-            style: TextStyle(fontWeight: FontWeight.bold)),
-        const SizedBox(height: 8),
-        const BharatTextField(
-          type: BharatTextFieldType.upi,
+        const Text(
+          'UPI ID (Auto PSP & Bank Detector):',
+          style: TextStyle(fontWeight: FontWeight.bold),
         ),
+        const SizedBox(height: 8),
+        const BharatTextField(type: BharatTextFieldType.upi),
         const SizedBox(height: 20),
-        const Text('GSTIN (15 Alphanumeric Characters):',
-            style: TextStyle(fontWeight: FontWeight.bold)),
-        const SizedBox(height: 8),
-        const BharatTextField(
-          type: BharatTextFieldType.gstin,
+        const Text(
+          'GSTIN (15 Alphanumeric Characters):',
+          style: TextStyle(fontWeight: FontWeight.bold),
         ),
+        const SizedBox(height: 8),
+        const BharatTextField(type: BharatTextFieldType.gstin),
         const SizedBox(height: 20),
-        const Text('Indian Mobile Number (+91):',
-            style: TextStyle(fontWeight: FontWeight.bold)),
-        const SizedBox(height: 8),
-        const BharatTextField(
-          type: BharatTextFieldType.phone,
+        const Text(
+          'Indian Mobile Number (+91):',
+          style: TextStyle(fontWeight: FontWeight.bold),
         ),
+        const SizedBox(height: 8),
+        const BharatTextField(type: BharatTextFieldType.phone),
       ],
     );
   }

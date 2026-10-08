@@ -136,8 +136,9 @@ class BharatVehicle {
             series = delhiMatch.group(3);
             number = delhiMatch.group(4);
           } else {
-            final compactNoSeries =
-                _standardCompactNoSeriesRegex.firstMatch(unspaced);
+            final compactNoSeries = _standardCompactNoSeriesRegex.firstMatch(
+              unspaced,
+            );
             if (compactNoSeries != null) {
               stateCode = compactNoSeries.group(1);
               rtoCode = compactNoSeries.group(2);

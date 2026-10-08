@@ -24,8 +24,10 @@ class BharatPhoneticInputFormatter extends TextInputFormatter {
     // When the user has just typed a space, transliterate the preceding word.
     if (convertOnSpace) {
       if (newValue.text.endsWith(' ') && !oldValue.text.endsWith(' ')) {
-        final textWithoutTrailingSpace =
-            newValue.text.substring(0, newValue.text.length - 1);
+        final textWithoutTrailingSpace = newValue.text.substring(
+          0,
+          newValue.text.length - 1,
+        );
         final transliterated = BharatTransliterator.transliterate(
           textWithoutTrailingSpace,
           targetScript: targetScript,

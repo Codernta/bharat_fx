@@ -76,7 +76,8 @@ class BharatIfsc {
       return IfscValidationResult(
         ifsc: cleaned,
         isValid: false,
-        errorMessage: 'Invalid IFSC format (expected 4 letters, 0, and 6 branch chars)',
+        errorMessage:
+            'Invalid IFSC format (expected 4 letters, 0, and 6 branch chars)',
       );
     }
 

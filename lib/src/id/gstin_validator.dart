@@ -77,7 +77,8 @@ class BharatGstin {
         isValid: false,
         stateCode: stateCode,
         pan: pan,
-        errorMessage: 'Embedded PAN "$pan" in GSTIN is invalid: ${panResult.errorMessage}',
+        errorMessage:
+            'Embedded PAN "$pan" in GSTIN is invalid: ${panResult.errorMessage}',
       );
     }
 

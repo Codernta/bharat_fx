@@ -50,10 +50,9 @@ class BharatScriptInputFormatter extends TextInputFormatter {
     }
 
     final filtered = buffer.toString();
-    final newSelectionOffset =
-        newValue.selection.baseOffset <= filtered.length
-            ? newValue.selection.baseOffset
-            : filtered.length;
+    final newSelectionOffset = newValue.selection.baseOffset <= filtered.length
+        ? newValue.selection.baseOffset
+        : filtered.length;
 
     return TextEditingValue(
       text: filtered,
