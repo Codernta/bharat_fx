@@ -1,7 +1,8 @@
 # Bharat FX 🇮🇳
 ### The Ultimate Indian Localization & Input Toolkit for Flutter
 
-[![pub package](https://img.shields.io/badge/pub-v1.0.0-blue.svg)](https://pub.dev/packages/bharat_fx)
+[![pub package](https://img.shields.io/pub/v/bharat_fx.svg)](https://pub.dev/packages/bharat_fx)
+[![pub points](https://img.shields.io/pub/points/bharat_fx.svg)](https://pub.dev/packages/bharat_fx/score)
 [![CI](https://github.com/Codernta/bharat_fx/actions/workflows/ci.yml/badge.svg)](https://github.com/Codernta/bharat_fx/actions/workflows/ci.yml)
 [![License: MIT](https://img.shields.io/badge/license-MIT-purple.svg)](https://opensource.org/licenses/MIT)
 [![Flutter](https://img.shields.io/badge/Flutter-3.x%20%7C%20Dart%203.x-02569B.svg?logo=flutter)](https://flutter.dev)

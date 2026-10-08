@@ -1,5 +1,11 @@
 # Changelog
 
+## 1.0.1
+
+* Standardized Dart code formatting across all library files.
+* Enhanced documentation with visual banner graphic.
+* Refined Dart SDK constraints for broad compatibility.
+
 ## 1.0.0
 
 * Initial release of `bharat_fx`: The Ultimate Indian Localization & Input Toolkit for Flutter.

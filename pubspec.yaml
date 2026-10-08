@@ -1,6 +1,6 @@
 name: bharat_fx
 description: "The Ultimate Indian Localization & Input Toolkit for Flutter. Indian currency formatter (Lakh/Crore & words), offline PIN code address resolver, vernacular phonetic keyboard, vehicle plate validator, and Indian ID validators (Aadhaar, PAN, UPI, GSTIN)."
-version: 1.0.0
+version: 1.0.1
 homepage: https://github.com/codernta/bharat_fx
 repository: https://github.com/codernta/bharat_fx
 issue_tracker: https://github.com/codernta/bharat_fx/issues
