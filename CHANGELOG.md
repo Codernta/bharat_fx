@@ -1,5 +1,9 @@
 # Changelog
 
+## 1.0.2
+
+* Shortened package description in `pubspec.yaml` to adhere to pub.dev conventions.
+
 ## 1.0.1
 
 * Standardized Dart code formatting across all library files.
