@@ -40,8 +40,9 @@ class BharatCardToken {
   bool get isValid {
     if (token.trim().isEmpty) return false;
     if (tokenReferenceNumber.trim().isEmpty) return false;
-    if (lastFour.length != 4 || !RegExp(r'^\d{4}$').hasMatch(lastFour))
+    if (lastFour.length != 4 || !RegExp(r'^\d{4}$').hasMatch(lastFour)) {
       return false;
+    }
     return BharatCard.validateExpiry(expiryMonth, expiryYear);
   }
 

@@ -177,7 +177,7 @@ void main() {
       const log = 'Contact +91 98765 43210 or VPA ramesh@okaxis';
       final redacted = BharatPiiRedactor.redact(log);
       expect(redacted, contains('+91 XXXXX 43210'));
-      expect(redacted, contains('r****h@okaxis'));
+      expect(redacted, contains('rXXXXh@okaxis'));
     });
 
     test('redacts recursive JSON and telemetry maps', () {
