@@ -1,16 +1,21 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import '../currency/bharat_currency.dart';
+import '../currency/bharat_money.dart';
 import '../id/aadhaar_validator.dart';
+import '../id/bank_account_validator.dart';
+import '../id/card_validator.dart';
 import '../id/gstin_validator.dart';
 import '../id/id_formatters.dart';
 import '../id/ifsc_validator.dart';
 import '../id/pan_validator.dart';
 import '../id/phone_validator.dart';
 import '../id/upi_validator.dart';
+import '../id/vid_validator.dart';
 import '../input/pin_code_data.dart';
 import '../input/pin_code_formatter.dart';
 import '../input/pin_code_validator.dart';
+import '../security/input_security.dart';
 import '../text/indian_scripts.dart';
 import '../text/phonetic_formatter.dart';
 import '../text/script_formatter.dart';
@@ -18,13 +23,18 @@ import '../vehicle/vehicle_formatter.dart';
 import '../vehicle/vehicle_types.dart';
 import '../vehicle/vehicle_validator.dart';
 
-/// Preset input types tailored for Indian apps and data fields.
+/// Preset input types tailored for Indian apps, payments, and data fields.
 enum BharatTextFieldType {
   aadhaar,
+  vid,
   pan,
   upi,
   pinCode,
   currency,
+  money,
+  card,
+  cvv,
+  bankAccount,
   vehiclePlate,
   phone,
   gstin,
@@ -34,7 +44,9 @@ enum BharatTextFieldType {
   custom,
 }
 
-/// A pre-configured, batteries-included [TextFormField] optimized for Indian inputs.
+/// A pre-configured, batteries-included [TextFormField] optimized for Indian inputs,
+/// hardened with enterprise fintech security policies (anti-keylogger, clipboard protection,
+/// and live validation).
 class BharatTextField extends StatefulWidget {
   final BharatTextFieldType type;
   final TextEditingController? controller;
@@ -47,12 +59,25 @@ class BharatTextField extends StatefulWidget {
   final bool enabled;
   final bool autofocus;
 
-  // Specific options
+  // Specific resolvers & options
   final IndianScript vernacularScript;
   final ValueChanged<PinCodeInfo>? onPinCodeResolved;
   final ValueChanged<VehiclePlateInfo>? onVehiclePlateResolved;
   final ValueChanged<UpiValidationResult>? onUpiResolved;
+  final ValueChanged<CardValidationResult>? onCardResolved;
+  final ValueChanged<BankAccountValidationResult>? onBankAccountResolved;
+  final ValueChanged<BharatMoney>? onMoneyResolved;
   final bool showLiveValidationIndicator;
+
+  // Fintech Security options
+  final String? bankCode;
+  final bool? obscureText;
+  final bool showObscureToggle;
+  final bool? allowCopy;
+  final bool? allowPaste;
+  final bool? enableSuggestions;
+  final bool? autocorrect;
+  final FintechInputSecurityConfig? securityConfig;
 
   const BharatTextField({
     super.key,
@@ -70,7 +95,18 @@ class BharatTextField extends StatefulWidget {
     this.onPinCodeResolved,
     this.onVehiclePlateResolved,
     this.onUpiResolved,
+    this.onCardResolved,
+    this.onBankAccountResolved,
+    this.onMoneyResolved,
     this.showLiveValidationIndicator = true,
+    this.bankCode,
+    this.obscureText,
+    this.showObscureToggle = false,
+    this.allowCopy,
+    this.allowPaste,
+    this.enableSuggestions,
+    this.autocorrect,
+    this.securityConfig,
   });
 
   @override
@@ -81,6 +117,7 @@ class _BharatTextFieldState extends State<BharatTextField> {
   late TextEditingController _controller;
   bool _isValid = false;
   String? _helperText;
+  late bool _isObscured;
 
   @override
   void initState() {
@@ -88,6 +125,16 @@ class _BharatTextFieldState extends State<BharatTextField> {
     _controller = widget.controller ??
         TextEditingController(text: widget.initialValue ?? '');
     _controller.addListener(_handleTextChange);
+
+    final config = widget.securityConfig;
+    if (widget.obscureText != null) {
+      _isObscured = widget.obscureText!;
+    } else if (config != null) {
+      _isObscured = config.obscureSensitive;
+    } else {
+      _isObscured = widget.type == BharatTextFieldType.cvv;
+    }
+
     if (_controller.text.isNotEmpty) {
       _checkValidity(_controller.text);
     }
@@ -114,6 +161,9 @@ class _BharatTextFieldState extends State<BharatTextField> {
     switch (widget.type) {
       case BharatTextFieldType.aadhaar:
         valid = BharatAadhaar.validate(text);
+        break;
+      case BharatTextFieldType.vid:
+        valid = BharatVid.validate(text);
         break;
       case BharatTextFieldType.pan:
         final panResult = BharatPan.validate(text);
@@ -162,10 +212,41 @@ class _BharatTextFieldState extends State<BharatTextField> {
         valid = ifscResult.isValid;
         if (valid) {
           helper = ifscResult.bankName;
+          if (ifscResult.isMergedOrDefunct) {
+            helper = ifscResult.warningMessage;
+          }
+        }
+        break;
+      case BharatTextFieldType.card:
+        final cardResult = BharatCard.validate(text);
+        valid = cardResult.isValid;
+        if (valid) {
+          helper = cardResult.cardTypeName;
+          widget.onCardResolved?.call(cardResult);
+        }
+        break;
+      case BharatTextFieldType.cvv:
+        valid = BharatCard.validateCvv(text);
+        break;
+      case BharatTextFieldType.bankAccount:
+        final accResult = BharatBankAccount.validate(
+          text,
+          bankCode: widget.bankCode,
+        );
+        valid = accResult.isValid;
+        if (valid) {
+          widget.onBankAccountResolved?.call(accResult);
         }
         break;
       case BharatTextFieldType.currency:
         valid = text.isNotEmpty;
+        break;
+      case BharatTextFieldType.money:
+        final money = BharatMoney.parse(text);
+        valid = money != null && money.isPositive;
+        if (valid) {
+          widget.onMoneyResolved?.call(money);
+        }
         break;
       case BharatTextFieldType.vernacularPhonetic:
       case BharatTextFieldType.vernacularRestricted:
@@ -180,6 +261,62 @@ class _BharatTextFieldState extends State<BharatTextField> {
         _helperText = helper;
       });
     }
+  }
+
+  bool _computeEffectiveAllowCopy() {
+    if (widget.allowCopy != null) return widget.allowCopy!;
+    if (widget.securityConfig != null) return widget.securityConfig!.allowCopy;
+    // Default: block copying for sensitive financial/identification credentials
+    return switch (widget.type) {
+      BharatTextFieldType.aadhaar => false,
+      BharatTextFieldType.vid => false,
+      BharatTextFieldType.pan => false,
+      BharatTextFieldType.card => false,
+      BharatTextFieldType.cvv => false,
+      BharatTextFieldType.bankAccount => false,
+      _ => true,
+    };
+  }
+
+  bool _computeEffectiveAllowPaste() {
+    if (widget.allowPaste != null) return widget.allowPaste!;
+    if (widget.securityConfig != null) return widget.securityConfig!.allowPaste;
+    // Disallow pasting into CVV fields to guard against automated clipboard injection
+    return widget.type != BharatTextFieldType.cvv;
+  }
+
+  bool _computeEffectiveSuggestions() {
+    if (widget.enableSuggestions != null) return widget.enableSuggestions!;
+    if (widget.securityConfig != null) {
+      return !widget.securityConfig!.disableSuggestions;
+    }
+    // Prevent cloud prediction keyboards from harvesting financial IDs
+    return switch (widget.type) {
+      BharatTextFieldType.aadhaar => false,
+      BharatTextFieldType.vid => false,
+      BharatTextFieldType.pan => false,
+      BharatTextFieldType.card => false,
+      BharatTextFieldType.cvv => false,
+      BharatTextFieldType.bankAccount => false,
+      BharatTextFieldType.pinCode => false,
+      _ => true,
+    };
+  }
+
+  bool _computeEffectiveAutocorrect() {
+    if (widget.autocorrect != null) return widget.autocorrect!;
+    if (widget.securityConfig != null) {
+      return !widget.securityConfig!.disableAutocorrect;
+    }
+    return switch (widget.type) {
+      BharatTextFieldType.aadhaar => false,
+      BharatTextFieldType.vid => false,
+      BharatTextFieldType.pan => false,
+      BharatTextFieldType.card => false,
+      BharatTextFieldType.cvv => false,
+      BharatTextFieldType.bankAccount => false,
+      _ => true,
+    };
   }
 
   @override
@@ -202,12 +339,56 @@ class _BharatTextFieldState extends State<BharatTextField> {
         prefixIcon = const Icon(Icons.badge_outlined);
         break;
 
+      case BharatTextFieldType.vid:
+        keyboardType = TextInputType.number;
+        formatters = [
+          FilteringTextInputFormatter.digitsOnly,
+          BharatVidInputFormatter(),
+        ];
+        label = 'Virtual ID (VID)';
+        hint = 'XXXX XXXX XXXX XXXX';
+        prefixIcon = const Icon(Icons.shield_outlined);
+        break;
+
       case BharatTextFieldType.pan:
         keyboardType = TextInputType.text;
         formatters = [BharatPanInputFormatter()];
         label = 'PAN Card Number';
         hint = 'ABCDE1234F';
         prefixIcon = const Icon(Icons.credit_card_outlined);
+        break;
+
+      case BharatTextFieldType.card:
+        keyboardType = TextInputType.number;
+        formatters = [
+          FilteringTextInputFormatter.digitsOnly,
+          BharatCardInputFormatter(),
+        ];
+        label = 'Card Number (RuPay / Visa / MC)';
+        hint = 'XXXX XXXX XXXX XXXX';
+        prefixIcon = const Icon(Icons.credit_card);
+        break;
+
+      case BharatTextFieldType.cvv:
+        keyboardType = TextInputType.number;
+        formatters = [
+          FilteringTextInputFormatter.digitsOnly,
+          BharatCvvInputFormatter(),
+        ];
+        label = 'CVV';
+        hint = '•••';
+        prefixIcon = const Icon(Icons.lock_outline);
+        break;
+
+      case BharatTextFieldType.bankAccount:
+        keyboardType = TextInputType.number;
+        formatters = [
+          FilteringTextInputFormatter.digitsOnly,
+          BharatBankAccountInputFormatter(),
+        ];
+        label = 'Bank Account Number';
+        hint = '9 to 18 digits';
+        prefixIcon = const Icon(Icons.account_balance_outlined);
         break;
 
       case BharatTextFieldType.upi:
@@ -239,6 +420,7 @@ class _BharatTextFieldState extends State<BharatTextField> {
         break;
 
       case BharatTextFieldType.currency:
+      case BharatTextFieldType.money:
         keyboardType = const TextInputType.numberWithOptions(decimal: true);
         formatters = [BharatCurrencyInputFormatter()];
         label = 'Amount (₹)';
@@ -318,9 +500,15 @@ class _BharatTextFieldState extends State<BharatTextField> {
         break;
     }
 
-    final suffixIcon = widget.showLiveValidationIndicator && _isValid
-        ? const Icon(Icons.check_circle, color: Colors.green)
-        : null;
+    Widget? suffixIcon;
+    if (widget.showObscureToggle) {
+      suffixIcon = IconButton(
+        icon: Icon(_isObscured ? Icons.visibility : Icons.visibility_off),
+        onPressed: () => setState(() => _isObscured = !_isObscured),
+      );
+    } else if (widget.showLiveValidationIndicator && _isValid) {
+      suffixIcon = const Icon(Icons.check_circle, color: Colors.green);
+    }
 
     final defaultDecoration = InputDecoration(
       labelText: label,
@@ -331,11 +519,34 @@ class _BharatTextFieldState extends State<BharatTextField> {
       border: const OutlineInputBorder(),
     );
 
+    final effectiveAllowCopy = _computeEffectiveAllowCopy();
+    final effectiveAllowPaste = _computeEffectiveAllowPaste();
+
     return TextFormField(
       controller: _controller,
       focusNode: widget.focusNode,
       keyboardType: keyboardType,
       inputFormatters: formatters,
+      obscureText: _isObscured,
+      enableSuggestions: _computeEffectiveSuggestions(),
+      autocorrect: _computeEffectiveAutocorrect(),
+      contextMenuBuilder: (context, editableTextState) {
+        final buttonItems = editableTextState.contextMenuButtonItems;
+        if (!effectiveAllowCopy) {
+          buttonItems
+              .removeWhere((item) => item.type == ContextMenuButtonType.copy);
+          buttonItems
+              .removeWhere((item) => item.type == ContextMenuButtonType.cut);
+        }
+        if (!effectiveAllowPaste) {
+          buttonItems
+              .removeWhere((item) => item.type == ContextMenuButtonType.paste);
+        }
+        return AdaptiveTextSelectionToolbar.buttonItems(
+          anchors: editableTextState.contextMenuAnchors,
+          buttonItems: buttonItems,
+        );
+      },
       enabled: widget.enabled,
       autofocus: widget.autofocus,
       onChanged: widget.onChanged,
@@ -354,6 +565,10 @@ class _BharatTextFieldState extends State<BharatTextField> {
           return BharatAadhaar.validate(value)
               ? null
               : 'Please enter a valid 12-digit Aadhaar number';
+        case BharatTextFieldType.vid:
+          return BharatVid.validate(value)
+              ? null
+              : 'Please enter a valid 16-digit Virtual ID (VID)';
         case BharatTextFieldType.pan:
           final res = BharatPan.validate(value);
           return res.isValid ? null : res.errorMessage;
@@ -377,7 +592,24 @@ class _BharatTextFieldState extends State<BharatTextField> {
         case BharatTextFieldType.ifsc:
           final i = BharatIfsc.validate(value);
           return i.isValid ? null : i.errorMessage;
+        case BharatTextFieldType.card:
+          final c = BharatCard.validate(value);
+          return c.isValid ? null : c.errorMessage;
+        case BharatTextFieldType.cvv:
+          return BharatCard.validateCvv(value)
+              ? null
+              : 'Please enter a valid 3 or 4 digit CVV';
+        case BharatTextFieldType.bankAccount:
+          final b =
+              BharatBankAccount.validate(value, bankCode: widget.bankCode);
+          return b.isValid ? null : b.errorMessage;
         case BharatTextFieldType.currency:
+          return null;
+        case BharatTextFieldType.money:
+          final m = BharatMoney.parse(value);
+          return m != null && m.isPositive
+              ? null
+              : 'Please enter a valid monetary amount';
         case BharatTextFieldType.vernacularPhonetic:
         case BharatTextFieldType.vernacularRestricted:
         case BharatTextFieldType.custom:

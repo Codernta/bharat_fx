@@ -87,10 +87,58 @@ class BharatUpi {
     'unionbank': ('Union Bank Mobile', 'Union Bank of India'),
   };
 
+  // Invisible characters and zero-width spaces commonly used in evasion attacks
+  static final RegExp _invisibleCharsRegex = RegExp(
+    r'[\u200B-\u200D\uFEFF\u00A0\u2060\u180E\u2000-\u200A]',
+  );
+
+  // Common Cyrillic & Greek homoglyphs mimicking Latin letters
+  static final RegExp _homoglyphsRegex = RegExp(
+    r'[\u0430\u0435\u043E\u0440\u0441\u0443\u0445\u0456\u0458\u0455\u03BF\u03C1]',
+  );
+
+  // Common phishing prefixes and patterns in Indian UPI scams
+  static final List<String> _phishingPatterns = [
+    'refund-',
+    'refund.',
+    'support-',
+    'support.',
+    'kyc-help',
+    'kyc-update',
+    'helpline-',
+    'cashback-win',
+    'reward-claim',
+  ];
+
+  /// Sanitizes a UPI ID by stripping invisible characters and zero-width spaces.
+  static String sanitize(String? upiId) {
+    if (upiId == null) return '';
+    return upiId.replaceAll(_invisibleCharsRegex, '').trim();
+  }
+
+  /// Checks if [upiId] contains deceptive Unicode homoglyph characters
+  /// (e.g. Cyrillic letters looking identical to Latin letters).
+  static bool hasHomoglyphs(String? upiId) {
+    if (upiId == null) return false;
+    return _homoglyphsRegex.hasMatch(upiId);
+  }
+
+  /// Evaluates whether a UPI ID exhibits suspicious phishing patterns
+  /// (e.g., impersonating customer care, fake KYC, or refund handles).
+  static bool isSuspiciousPhishingHandle(String? upiId) {
+    if (upiId == null) return false;
+    final lower = sanitize(upiId).toLowerCase();
+    for (final pattern in _phishingPatterns) {
+      if (lower.contains(pattern)) return true;
+    }
+    return false;
+  }
+
   /// Checks if [upiId] has a valid syntax format.
   static bool isValid(String? upiId) {
     if (upiId == null) return false;
-    final cleaned = upiId.trim();
+    final cleaned = sanitize(upiId);
+    if (hasHomoglyphs(cleaned)) return false;
     return _upiRegex.hasMatch(cleaned);
   }
 
@@ -111,7 +159,16 @@ class BharatUpi {
       );
     }
 
-    final cleaned = upiId.trim().toLowerCase();
+    if (hasHomoglyphs(upiId)) {
+      return UpiValidationResult(
+        upiId: upiId,
+        isValid: false,
+        errorMessage:
+            'Security Warning: UPI ID contains suspicious homoglyph characters',
+      );
+    }
+
+    final cleaned = sanitize(upiId).toLowerCase();
     if (!isValid(cleaned)) {
       return UpiValidationResult(
         upiId: cleaned,
@@ -148,7 +205,7 @@ class BharatUpi {
 
   /// Returns the PSP name associated with a UPI handle (e.g. `okaxis` -> `Google Pay`).
   static String? getPsp(String handle) {
-    final clean = handle.replaceAll('@', '').toLowerCase();
+    final clean = sanitize(handle).replaceAll('@', '').toLowerCase();
     return _knownHandles[clean]?.$1;
   }
 }

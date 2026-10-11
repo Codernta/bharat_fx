@@ -1,15 +1,28 @@
-/// The Ultimate Indian Localization & Input Toolkit for Flutter.
+/// The Ultimate Indian Localization, Fintech & Input Toolkit for Flutter.
 ///
 /// Features:
 /// - Indian Currency Formatter with Lakh/Crore grouping and multi-language Number-to-Words.
+/// - Exact fixed-point [BharatMoney] for precision fintech calculations and NPCI/RBI limit checks.
+/// - Enterprise Fintech Security: Timing-safe equality, PII/SPII redaction, sensitive memory zeroization,
+///   zero-dependency SHA-256 and HMAC checksum verification, and anti-keylogging guards.
 /// - Offline Indian Postal PIN code validator and district/state auto-resolver.
 /// - Vernacular text input filters and real-time phonetic transliteration keyboard.
 /// - Indian Vehicle registration number plate validator, RTO resolver, and HSRP widget.
-/// - Indian Government IDs & UPI validators (Aadhaar with Verhoeff algorithm, PAN, UPI, GSTIN, IFSC, Phone).
+/// - Indian Government IDs, Banking & UPI validators (Aadhaar with Verhoeff, 16-digit VID, PAN, RuPay/Cards,
+///   Bank Account validation, UPI Intent & tampering guard, GSTIN, IFSC with merged bank detection, Phone).
 library;
 
-// Currency Module
+// Fintech Security Module
+export 'src/security/fintech_security.dart';
+export 'src/security/input_security.dart';
+export 'src/security/payload_integrity.dart';
+export 'src/security/pii_redactor.dart';
+export 'src/security/sensitive_data.dart';
+export 'src/security/timing_safe.dart';
+
+// Currency & Precision Money Module
 export 'src/currency/bharat_currency.dart';
+export 'src/currency/bharat_money.dart';
 export 'src/currency/number_to_words.dart';
 export 'src/currency/words_languages.dart';
 
@@ -33,16 +46,21 @@ export 'src/vehicle/vehicle_plate_widget.dart';
 export 'src/vehicle/vehicle_types.dart';
 export 'src/vehicle/vehicle_validator.dart';
 
-// Government IDs, Payments & Identity Module
+// Government IDs, Payments, Banking & Identity Module
 export 'src/id/aadhaar_validator.dart';
+export 'src/id/bank_account_validator.dart';
 export 'src/id/bharat_id.dart';
+export 'src/id/card_token.dart';
+export 'src/id/card_validator.dart';
 export 'src/id/gstin_validator.dart';
 export 'src/id/id_formatters.dart';
 export 'src/id/ifsc_validator.dart';
 export 'src/id/pan_validator.dart';
 export 'src/id/phone_validator.dart';
+export 'src/id/upi_intent.dart';
 export 'src/id/upi_validator.dart';
+export 'src/id/vid_validator.dart';
 
-// Specialized Widgets
+// Specialized & Hardened Widgets
 export 'src/widgets/bharat_currency_text.dart';
 export 'src/widgets/bharat_text_field.dart';

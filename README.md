@@ -1,5 +1,5 @@
 # Bharat FX 🇮🇳
-### The Ultimate Indian Localization & Input Toolkit for Flutter
+### The Ultimate Indian Localization, Fintech & Input Toolkit for Flutter
 
 [![pub package](https://img.shields.io/pub/v/bharat_fx.svg)](https://pub.dev/packages/bharat_fx)
 [![pub points](https://img.shields.io/pub/points/bharat_fx.svg)](https://pub.dev/packages/bharat_fx/score)
@@ -12,21 +12,35 @@
   <img src="https://raw.githubusercontent.com/Codernta/bharat_fx/main/assets/banner.jpg" alt="Bharat FX Banner" width="100%" style="border-radius: 8px;">
 </p>
 
-**`bharat_fx`** is a **lightweight, 100% dependency-free Flutter package** tailored specifically for the Indian market. Global packages often overlook the unique cultural, financial, and linguistic nuances of India. `bharat_fx` solves these India-specific pain points out of the box with zero external dependencies and zero API fees.
+**`bharat_fx`** is an **enterprise-grade, 100% dependency-free Flutter & Dart toolkit** designed specifically for Indian localization, fintech, and banking applications. It incorporates strict compliance guidelines from the **Reserve Bank of India (RBI)**, **National Payments Corporation of India (NPCI)**, **Unique Identification Authority of India (UIDAI)**, **PCI DSS 4.0**, and the **Digital Personal Data Protection (DPDP) Act 2023**.
 
 ---
 
 ## 🌟 Key Highlights
 
-- **💰 Indian Currency Formatter (`BharatCurrency`)**: Formats numbers into the Indian numbering system (**Lakh / Crore**: `₹1,50,000` instead of `150,000`), compact scales (`1.5 L`, `2.5 Cr`), and converts numbers to words in **8 Indian languages** (English, Hindi, Tamil, Telugu, Kannada, Marathi, Gujarati, Bengali).
-- **📍 Smart Indian Address & PIN Code Validator (`BharatInput`)**: 6-digit Indian PIN code validator with a **bundled offline local algorithm** that instantly resolves **District, State, Postal Circle, and Zone** in sub-millisecond time without network calls.
-- **✍️ Vernacular Keyboard & Phonetic Filters (`BharatText`)**: Input formatters that restrict inputs to native Indian scripts (Devanagari, Tamil, Telugu, etc.) or convert **Hinglish/Phonetic text to Indian scripts in real-time** (e.g. typing `"namaste"` becomes `"नमस्ते"`).
-- **🚗 Vehicle Number Plate Validator & HSRP Widget (`BharatVehicle`)**: Comprehensive regex validator for State formats (`DL 01 AB 1234`), the new **Bharat (`BH`) series**, Military, and Diplomatic plates. Includes an authentic **High-Security Registration Plate (HSRP)** visual widget.
-- **🆔 Government IDs & UPI Masker / Validator (`BharatId`)**:
-  - **Aadhaar Card**: 12 digits with the official **UIDAI Verhoeff algorithm** checksum and UIDAI-compliant masking (`XXXX XXXX 1234`).
-  - **PAN Card**: 10-character structure with **4th character entity status decoding** (`P` for Individual, `C` for Company, `T` for Trust, etc.).
-  - **UPI ID**: Validates VPA format and automatically identifies the **PSP and Bank** (`@okaxis` -> Google Pay / Axis Bank, `@ybl` -> PhonePe / YES Bank, etc.).
-  - **GSTIN, IFSC & Mobile Number**: 15-char GSTIN with PAN extraction, 11-char IFSC bank identifier, and 10-digit Indian mobile number formatters.
+- **🛡️ Enterprise Fintech Security (`BharatSecurity`)**:
+  - **Timing Side-Channel Defense (`TimingSafe`)**: Constant-time equality checks for OTPs, MPINs, transaction signatures, and auth tokens.
+  - **Sensitive Memory Protection (`SensitiveValue<T>`)**: Zeroizable, leak-proof memory wrapper that suppresses raw values from logs, crash reports, and JSON telemetry.
+  - **Comprehensive PII Redactor (`BharatPiiRedactor`)**: Auto-detects and redacts Aadhaar (UIDAI rules), VIDs, PANs, Luhn-verified cards, CVVs, bank accounts, UPI VPAs, and phones in text and JSON maps.
+  - **Zero-Dependency Cryptographic Integrity (`BharatHash`)**: Pure-Dart RFC 6234 SHA-256 and RFC 2104 HMAC-SHA256 payload signing and payment checksum verification.
+  - **Anti-Keylogging & Anti-Clipboard Guards**: Disables third-party cloud keyboard harvesting and clipboard snooping on sensitive financial inputs.
+  - **Anti-Brute Force Guard (`AntiBruteForceGuard`)**: Sliding-window rate limiter to throttle credential and OTP guessing attacks.
+- **💰 Exact Precision Money & Indian Currency (`BharatMoney` & `BharatCurrency`)**:
+  - Eliminates IEEE 754 floating-point rounding bugs using integer Paise (`1 Rupee = 100 Paise`).
+  - Pre-built NPCI & RBI transaction limit checks (UPI ₹1L standard, ₹2L capital markets, ₹5L tax/institutions; IMPS ₹5L).
+  - Indian numbering system (**Lakh / Crore**: `₹1,50,000`), compact scales (`1.5 L`, `2.5 Cr`), and number-to-words in **8 Indian languages**.
+- **💳 Payment Cards & RBI Tokenization (`BharatCard` & `BharatCardToken`)**:
+  - **RuPay (NPCI)**, Visa, Mastercard, and Amex detection with Luhn (Modulo 10) checksum verification.
+  - PCI DSS 4.0 compliant masking and RBI Card-on-File Tokenization (CoFT) models.
+- **📱 NPCI UPI Intent & Fraud Defenses (`BharatUpiIntent` & `BharatUpi`)**:
+  - Parses and verifies `upi://pay` deep links against parameter tampering, amount limits, and non-INR currency injection.
+  - Defends against invisible zero-width spaces, Cyrillic/Greek homoglyphs, and phishing handle patterns.
+- **🏦 Indian Bank Accounts & Merged IFSC (`BharatBankAccount` & `BharatIfsc`)**:
+  - 9-to-18 digit account validation with bank-specific lengths (SBI, HDFC, ICICI, Axis, PNB, etc.) and timing-safe confirmation matching.
+  - Detects defunct merged bank IFSC codes (Allahabad, Syndicate, Oriental, etc.) with migration advisories.
+- **🆔 UIDAI Aadhaar & Virtual ID (VID) (`BharatAadhaar` & `BharatVid`)**:
+  - 12-digit Aadhaar and 16-digit Virtual ID validation with official UIDAI **Verhoeff checksum**.
+  - UIDAI privacy masking (`XXXX XXXX 1234` and `XXXX XXXX XXXX 1234`).
 - **⚡ 100% Dependency-Free**: Pure Flutter and Dart. Zero external package conflicts.
 
 ---
@@ -37,7 +51,7 @@ Add `bharat_fx` to your `pubspec.yaml`:
 
 ```yaml
 dependencies:
-  bharat_fx: ^1.0.0
+  bharat_fx: ^1.0.3
 ```
 
 Import the package:
@@ -48,267 +62,285 @@ import 'package:bharat_fx/bharat_fx.dart';
 
 ---
 
-## 🚀 Module Walkthrough
+## 🛡️ Enterprise Fintech Security Walkthrough
 
-### 1. Indian Currency Formatter (`BharatCurrency`)
+### 1. Timing-Safe Equality Checks (Side-Channel Defense)
 
-Global formatters use millions and billions, but India operates on Lakhs and Crores.
+Standard `==` operations in programming languages abort on the first mismatched byte, creating timing discrepancies that attackers can exploit to recover OTPs, MPINs, or webhook HMAC signatures.
 
 ```dart
-// Format with Indian comma grouping (2,2,3 grouping)
-BharatCurrency.format(150000); // "₹1,50,000"
-BharatCurrency.format(1234567.50); // "₹12,34,567.50"
-BharatCurrency.format(10000000, showSymbol: false); // "1,00,00,000"
+// Constant-time string comparison
+final isValidOtp = TimingSafe.equals(enteredOtp, expectedOtp);
 
-// Compact Indian notation
-BharatCurrency.compact(150000); // "₹1.5 L"
-BharatCurrency.compact(150000, shortUnit: false); // "₹1.5 Lakh"
-BharatCurrency.compact(25000000); // "₹2.5 Cr"
-BharatCurrency.compact(1200000000); // "₹1.2 Arab"
+// Constant-time byte array comparison for signature verification
+final isSignatureValid = TimingSafe.bytesEquals(calculatedHmacBytes, receivedHmacBytes);
+```
 
-// Convert numbers into words across 8 Indian languages
-BharatCurrency.toWords(15000);
-// "Fifteen Thousand Rupees Only"
+### 2. Sensitive Memory Protection & Zeroization (`SensitiveValue`)
 
-BharatCurrency.toWords(15000, language: BharatLanguage.hindi);
-// "पंद्रह हज़ार रुपये मात्र"
+Compliant with OWASP MASVS-STORAGE and MASVS-PRIVACY:
 
-BharatCurrency.toWords(100000, language: BharatLanguage.tamil);
-// "ஒரு லட்சம் ரூபாய் மட்டும்"
+```dart
+// Wrap sensitive credentials in memory
+final mpin = SensitiveValue('4829', label: 'MPIN');
 
-BharatCurrency.toWords(100000, language: BharatLanguage.telugu);
-// "ఒక లక్ష రూపాయలు మాత్రమే"
+// Prevents accidental logging in console, Sentry, or Firebase
+print(mpin); // "[PROTECTED_MPIN]"
+print(mpin.toJson()); // "[PROTECTED_MPIN]"
 
-// Live typing TextInputFormatter for TextFields
-TextField(
-  keyboardType: TextInputType.number,
-  inputFormatters: [BharatCurrencyInputFormatter()],
-)
+// Access value only when dispatching to secured API
+final raw = mpin.reveal();
 
-// Display Widget
-BharatCurrencyText(
-  150000,
-  showWordsSubtitle: true, // Displays "One Lakh Fifty Thousand Rupees Only" below
-)
+// Scoped execution
+mpin.use((value) {
+  paymentService.submit(value);
+});
+
+// Securely wipe memory buffers immediately after use
+mpin.zeroize();
+print(mpin.isDisposed); // true
+```
+
+### 3. Comprehensive PII & Financial Data Redactor (`BharatPiiRedactor`)
+
+Complies with the **Digital Personal Data Protection (DPDP) Act 2023** and **UIDAI Privacy Norms**:
+
+```dart
+final rawLog = "Customer Aadhaar 234567890124 and PAN ABCPD1234F initiated payment with cvv: 999";
+
+// Automatically sanitizes free text, logs, and crash traces
+final cleanLog = BharatSecurity.redactPii(rawLog);
+// "Customer Aadhaar XXXX XXXX 0124 and PAN XXXXX1234F initiated payment with cvv: ***"
+
+// Recursively scrubs JSON/Map payloads before sending to telemetry
+final telemetryEvent = {
+  'user': 'Vikram',
+  'mpin': '1234',
+  'card_number': '6071231234567890',
+  'contact': {'phone': '+91 98765 43210'},
+};
+
+final sanitizedPayload = BharatSecurity.redactMap(telemetryEvent);
+// Keys like mpin & card_number are replaced with [REDACTED], while phone is masked!
+```
+
+### 4. Zero-Dependency Cryptographic Integrity (`BharatHash`)
+
+Calculate SHA-256 hashes, HMAC-SHA256 signatures, and canonical payment gateway checksums (Razorpay, Cashfree, PayU, PhonePe PG, NPCI):
+
+```dart
+// SHA-256 (RFC 6234 pure Dart)
+final hash = BharatSecurity.sha256("transaction_payload");
+
+// HMAC-SHA256 (RFC 2104)
+final signature = BharatSecurity.hmacSha256("api_secret_key", "order_id=123&amount=500.00");
+
+// Canonical parameter signing & constant-time checksum verification
+final params = {
+  'merchant_id': 'MERCH_99',
+  'amount': '1500.00',
+  'currency': 'INR',
+  'order_id': 'ORD_5544',
+};
+
+final checksum = BharatSecurity.signPayload(params, 'secret_key');
+final isValid = BharatSecurity.verifyPayload(params, 'secret_key', checksum); // true
+```
+
+### 5. Anti-Brute Force Sliding-Window Rate Limiter
+
+```dart
+final rateLimiter = BharatSecurity.createRateLimiter(
+  maxAttempts: 3,
+  window: const Duration(minutes: 5),
+);
+
+if (!rateLimiter.recordAttempt(userId)) {
+  throw Exception("Too many attempts. Please try again after 5 minutes.");
+}
 ```
 
 ---
 
-### 2. Smart Indian Address & PIN Code Validator (`BharatInput`)
+## 💰 Precision Financial Currency (`BharatMoney` & `BharatCurrency`)
 
-Validate 6-digit Indian PIN codes and resolve geographical details **100% offline with zero network latency**:
+### Exact Fixed-Point Indian Money (`BharatMoney`)
+
+Avoid IEEE 754 floating-point inaccuracies (`0.1 + 0.2 != 0.3`) in financial transactions:
 
 ```dart
-// Validation
-BharatPinCode.isValid('560001'); // true
-BharatPinCode.isValid('010001'); // false (Indian PINs never start with 0)
+// Exact Paise arithmetic (1 Rupee = 100 Paise)
+final itemPrice = BharatMoney.fromRupees(150.25);
+final deliveryFee = BharatMoney.fromRupees(50.75);
+final total = itemPrice + deliveryFee;
 
-// Instant offline local lookup
-final info = BharatPinCode.lookup('560001');
-print(info.state);    // "Karnataka"
-print(info.district); // "Bengaluru Urban"
-print(info.zone);     // "Southern Postal Zone"
-print(info.circle);   // "Karnataka"
+print(total.inRupees); // 201.0
+print(total.inPaise);  // 20100
+print(total.format()); // "₹201.00"
+
+// Precision GST calculation (18%)
+final subtotal = BharatMoney.fromRupees(1000.00);
+final gst = subtotal.percentage(18); // ₹180.00
+final grandTotal = subtotal + gst;   // ₹1180.00
+
+// NPCI & RBI Transaction Limit Validations
+print(total.isWithinUpiLimit);               // true (<= ₹1,00,000)
+print(total.isWithinUpiCapitalMarketsLimit); // true (<= ₹2,00,000)
+print(total.isWithinUpiMaxLimit);            // true (<= ₹5,00,000)
+print(total.isWithinImpsLimit);              // true (<= ₹5,00,000)
+
+// Safe String Parsing (rejects scientific notation injection)
+final parsed = BharatMoney.parse("₹ 1,50,000.50");
 ```
 
-#### Real-Time Auto-Filling Form Field:
-Drop in `BharatPinCodeFormField` to auto-fill the user's State and District controllers as soon as 6 digits are typed:
+### Indian Currency Formatter (`BharatCurrency`)
 
 ```dart
-final stateController = TextEditingController();
-final districtController = TextEditingController();
+// Format with Indian comma grouping (2,2,3 grouping)
+BharatCurrency.format(150000); // "₹1,50,000"
+BharatCurrency.format(10000000, showSymbol: false); // "1,00,00,000"
 
-BharatPinCodeFormField(
-  stateController: stateController,
-  districtController: districtController,
-  showResolvedInfoInline: true,
-  onResolved: (PinCodeInfo info) {
-    print("Resolved: ${info.district}, ${info.state}");
+// Compact Indian notation
+BharatCurrency.compact(150000); // "₹1.5 L"
+BharatCurrency.compact(25000000); // "₹2.5 Cr"
+
+// Convert numbers into words across 8 Indian languages
+BharatCurrency.toWords(15000); // "Fifteen Thousand Rupees Only"
+BharatCurrency.toWords(15000, language: BharatLanguage.hindi); // "पंद्रह हज़ार रुपये मात्र"
+BharatCurrency.toWords(100000, language: BharatLanguage.tamil); // "ஒரு லட்சம் ரூபாய் மட்டும்"
+```
+
+---
+
+## 💳 Cards, Banking, UPI & Government IDs (`BharatId`)
+
+### 1. Payment Cards & RuPay (`BharatCard`)
+```dart
+// Validates RuPay (NPCI), Visa, Mastercard, Amex with Luhn checksum
+final cardResult = BharatId.validateCard("6071231234567890");
+print(cardResult.isValid);     // true / false
+print(cardResult.isRuPay);     // true (NPCI RuPay network)
+print(cardResult.cardType);    // BharatCardType.rupay
+
+// Expiry & CVV
+BharatId.validateCardExpiry(12, 2028); // true
+BharatId.validateCvv("123", cardType: BharatCardType.rupay); // true
+
+// PCI DSS 4.0 Compliant Masking
+BharatId.maskCard("6071231234567890"); // "XXXX-XXXX-XXXX-7890"
+BharatId.maskCard("6071231234567890", preserveBin: true); // "6071 23XX XXXX 7890"
+```
+
+### 2. Indian Bank Account Number Validator (`BharatBankAccount`)
+```dart
+// Validates 9-to-18 digit account number with bank-specific length rules
+final sbiAccount = BharatId.validateBankAccount("12345678901", bankCode: "SBIN");
+print(sbiAccount.isValid); // true (11 digits for SBI)
+
+// Masking per RBI guidelines
+BharatId.maskBankAccount("123456789012"); // "XXXXXXXX9012"
+
+// Timing-safe account number matching (prevents confirmation timing leaks)
+final matches = BharatId.matchBankAccounts("123456789012", confirmAccountNumber);
+```
+
+### 3. NPCI UPI Intent & Deep Link Guard (`BharatUpiIntent`)
+```dart
+// Validates NPCI UPI Intent URIs against tampering, negative amounts, and non-INR currency
+final intent = BharatId.validateUpiIntent(
+  "upi://pay?pa=merchant@okhdfcbank&pn=Store&am=500.00&cu=INR"
+);
+print(intent.isValid); // true
+print(intent.amount);  // 500.0
+
+// Secure URI Builder (guarantees strict RFC 3986 percent-encoding)
+final secureUri = BharatUpiIntent.buildUri(
+  payeeAddress: "merchant@okhdfcbank",
+  payeeName: "Store Name",
+  amount: 1500.00,
+);
+```
+
+### 4. Defunct & Merged Bank IFSC Detector (`BharatIfsc`)
+```dart
+// Flags merged banks and provides RBI migration advice to prevent transfer failures
+final ifsc = BharatId.validateIfsc("ALLA0210001");
+print(ifsc.isMergedOrDefunct); // true
+print(ifsc.successorBankName); // "Indian Bank (IDIB)"
+print(ifsc.warningMessage);    // Advisory to use updated successor IFSC
+```
+
+### 5. UIDAI Aadhaar & 16-Digit Virtual ID (`BharatAadhaar` & `BharatVid`)
+```dart
+// 12-Digit Aadhaar with UIDAI Verhoeff Checksum
+BharatId.isAadhaar("234567890124"); // true
+BharatId.maskAadhaar("234567890124"); // "XXXX XXXX 0124"
+
+// 16-Digit Virtual ID (VID) Mandated by UIDAI for privacy
+BharatId.isVid("2345678901234567"); // true
+BharatId.maskVid("2345678901234567"); // "XXXX XXXX XXXX 4567"
+```
+
+---
+
+## 🔒 Hardened Fintech Input Field: `BharatTextField`
+
+A batteries-included `TextFormField` hardened for fintech and sensitive inputs:
+
+```dart
+// Card field with RuPay detection and anti-clipboard guard
+BharatTextField(
+  type: BharatTextFieldType.card,
+  onCardResolved: (result) {
+    print("Detected: ${result.cardTypeName}");
+  },
+)
+
+// CVV field (automatically obscured, disables copy/paste, disables cloud predictions)
+BharatTextField(
+  type: BharatTextFieldType.cvv,
+  showObscureToggle: true,
+)
+
+// Bank Account field with bank code validation
+BharatTextField(
+  type: BharatTextFieldType.bankAccount,
+  bankCode: 'SBIN',
+)
+
+// Aadhaar field with UIDAI Verhoeff validator
+BharatTextField(
+  type: BharatTextFieldType.aadhaar,
+)
+
+// Virtual ID (VID) field
+BharatTextField(
+  type: BharatTextFieldType.vid,
+)
+
+// Precision Fintech Money field
+BharatTextField(
+  type: BharatTextFieldType.money,
+  onMoneyResolved: (money) {
+    print("Amount in paise: ${money.inPaise}");
   },
 )
 ```
 
 ---
 
-### 3. Vernacular Keyboard & Phonetic Filters (`BharatText`)
-
-Provide natural typing for regional Indian users:
-
-```dart
-// Real-time Phonetic / Hinglish transliteration
-BharatTransliterator.transliterate("namaste"); // "नमस्ते"
-BharatTransliterator.transliterate("bharat mahan hai"); // "भारत महान है"
-BharatTransliterator.transliterate("vanakkam", targetScript: IndianScript.tamil); // "வணக்கம்"
-
-// Live phonetic keyboard formatter in TextField (converts on space)
-TextField(
-  inputFormatters: [
-    BharatPhoneticInputFormatter(
-      targetScript: IndianScript.devanagari,
-      convertOnSpace: true,
-    ),
-  ],
-)
-
-// Restrict input exclusively to an Indian script
-TextField(
-  inputFormatters: [
-    BharatScriptInputFormatter.single(IndianScript.devanagari),
-  ],
-)
-
-// Convert numbers between Arabic and Indic numerals
-BharatText.toIndicDigits("12345", IndianScript.devanagari); // "१२३४५"
-BharatText.fromIndicDigits("१२३४५"); // "12345"
-```
-
----
-
-### 4. Vehicle Registration Plate Validator (`BharatVehicle`)
-
-Validate Indian vehicle registration numbers and display authentic High-Security Registration Plates (HSRP):
-
-```dart
-// Validate and parse standard state format
-final plate = BharatVehicle.validate("DL 01 AB 1234");
-print(plate.isValid);    // true
-print(plate.stateName);  // "Delhi"
-print(plate.rtoName);    // "Mall Road, North Delhi"
-print(plate.rtoCode);    // "01"
-print(plate.series);     // "AB"
-print(plate.registrationNumber); // "1234"
-
-// Validate the new pan-India Bharat (BH) series
-final bh = BharatVehicle.validate("21 BH 1234 AA");
-print(bh.isValid);          // true
-print(bh.type);             // VehiclePlateType.bharatSeries
-print(bh.registrationYear); // 2021
-
-// Also supports Military (↑ 21 D 123456 X) and Diplomatic (77 CD 1234) plates
-```
-
-#### Realistic HSRP License Plate Widget:
-
-```dart
-BharatVehiclePlateWidget(
-  plateNumber: 'KA 01 AB 1234',
-  category: VehiclePlateCategory.privateVehicle, // White plate
-  // Or: commercialVehicle (Yellow), electricVehicle (Green), rentalVehicle (Black)
-  height: 56,
-)
-```
-
----
-
-### 5. Indian Government IDs & Payment Validators (`BharatId`)
-
-#### Aadhaar Card (12 Digits with UIDAI Verhoeff Checksum):
-```dart
-// Validates 12 digits, checks non-0/1 start, and runs the Verhoeff checksum algorithm
-BharatId.isAadhaar("234567890124"); // true / false
-
-// Masking per UIDAI privacy standards
-BharatId.maskAadhaar("234567890124"); // "XXXX XXXX 0124"
-BharatId.maskAadhaar("234567890124", maskChar: '•'); // "•••• •••• 0124"
-```
-
-#### PAN Card (10 Characters with 4th Char Entity Classifier):
-```dart
-final pan = BharatId.validatePan("ABCPD1234F");
-print(pan.isValid);             // true
-print(pan.category);            // PanCategory.individual
-print(pan.categoryDescription); // "Individual (Person)"
-
-// Validate entity category constraints
-final companyPan = BharatId.validatePan(
-  "AAACR1234G",
-  expectedCategory: PanCategory.individual,
-);
-print(companyPan.isValid); // false (PAN belongs to Company)
-
-// Masking
-BharatId.maskPan("ABCPD1234F"); // "XXXXX1234F"
-```
-
-#### UPI ID / VPA with PSP & Bank Detection:
-```dart
-final upi = BharatId.validateUpi("user@okaxis");
-print(upi.isValid);  // true
-print(upi.pspName);  // "Google Pay"
-print(upi.bankName); // "Axis Bank"
-
-final phonePe = BharatId.validateUpi("9876543210@ybl");
-print(phonePe.pspName); // "PhonePe"
-print(phonePe.bankName); // "YES Bank"
-```
-
-#### GSTIN, IFSC & Mobile Phone:
-```dart
-// GSTIN
-final gstin = BharatId.validateGstin("27AAPFU0939F1ZV");
-print(gstin.stateCode); // "27" (Maharashtra)
-print(gstin.pan);       // "AAPFU0939F"
-
-// IFSC
-final ifsc = BharatId.validateIfsc("SBIN0000123");
-print(ifsc.bankName); // "State Bank of India"
-
-// Indian Mobile (+91)
-final phone = BharatId.validatePhone("9876543210");
-print(phone.formattedNumber); // "+91 98765 43210"
-```
-
----
-
-### 6. Specialized UI Widget: `BharatTextField`
-
-An all-in-one pre-configured `TextFormField` with pre-wired formatters, regex, keyboards, and live validation indicators:
-
-```dart
-// Aadhaar field with 4-digit space grouping and Verhoeff validation
-BharatTextField(
-  type: BharatTextFieldType.aadhaar,
-)
-
-// PAN field with auto-capitalization and category decoding
-BharatTextField(
-  type: BharatTextFieldType.pan,
-)
-
-// UPI field with live PSP badge
-BharatTextField(
-  type: BharatTextFieldType.upi,
-)
-
-// Currency field with Rupee prefix and live Indian comma formatting
-BharatTextField(
-  type: BharatTextFieldType.currency,
-)
-
-// Vehicle plate field with auto-capitalization
-BharatTextField(
-  type: BharatTextFieldType.vehiclePlate,
-)
-```
-
----
-
-## 📱 Interactive Showcase App
-
-An interactive demo app showcasing all 5 modules is included in the `example/` directory.
-
-To run it:
-
-```bash
-cd example
-flutter run
-```
-
----
-
 ## 🧪 Comprehensive Test Coverage
 
-Every algorithm (Lakh/Crore grouping, Verhoeff checksum, PAN entity classification, PIN code resolution, phonetic transliteration, and vehicle plate regex) is backed by 55+ unit and widget tests:
+Every algorithm, cryptographic routine, and security validator is backed by rigorous tests:
+- Timing-safe constant-time equality
+- SensitiveValue memory zeroization
+- Pure-Dart SHA-256 and HMAC-SHA256 against NIST test vectors
+- PII and SPII redaction across text and deep maps
+- RuPay and credit/debit card Modulo-10 Luhn checksums
+- UIDAI Verhoeff checksum algorithm for Aadhaar and Virtual IDs
+- Bank-specific account lengths and NPCI UPI Intent parsing
+
+Run tests:
 
 ```bash
 flutter test

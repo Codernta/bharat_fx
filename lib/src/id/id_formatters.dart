@@ -148,3 +148,109 @@ class BharatPhoneInputFormatter extends TextInputFormatter {
     );
   }
 }
+
+/// [TextInputFormatter] for 16-digit UIDAI Virtual IDs (VID).
+/// Formats into 4-digit groups: `XXXX XXXX XXXX XXXX`.
+class BharatVidInputFormatter extends TextInputFormatter {
+  @override
+  TextEditingValue formatEditUpdate(
+    TextEditingValue oldValue,
+    TextEditingValue newValue,
+  ) {
+    if (newValue.text.isEmpty) return newValue;
+
+    final digits = newValue.text.replaceAll(RegExp(r'\D'), '');
+    final truncated = digits.length > 16 ? digits.substring(0, 16) : digits;
+
+    final buffer = StringBuffer();
+    for (int i = 0; i < truncated.length; i++) {
+      if (i > 0 && i % 4 == 0) {
+        buffer.write(' ');
+      }
+      buffer.write(truncated[i]);
+    }
+
+    final formatted = buffer.toString();
+    return TextEditingValue(
+      text: formatted,
+      selection: TextSelection.collapsed(offset: formatted.length),
+    );
+  }
+}
+
+/// [TextInputFormatter] for payment cards (RuPay, Visa, Mastercard, Amex).
+/// Formats into 4-digit blocks up to 19 digits.
+class BharatCardInputFormatter extends TextInputFormatter {
+  final int maxDigits;
+
+  BharatCardInputFormatter({this.maxDigits = 19});
+
+  @override
+  TextEditingValue formatEditUpdate(
+    TextEditingValue oldValue,
+    TextEditingValue newValue,
+  ) {
+    if (newValue.text.isEmpty) return newValue;
+
+    final digits = newValue.text.replaceAll(RegExp(r'\D'), '');
+    final truncated =
+        digits.length > maxDigits ? digits.substring(0, maxDigits) : digits;
+
+    final buffer = StringBuffer();
+    for (int i = 0; i < truncated.length; i++) {
+      if (i > 0 && i % 4 == 0) {
+        buffer.write(' ');
+      }
+      buffer.write(truncated[i]);
+    }
+
+    final formatted = buffer.toString();
+    return TextEditingValue(
+      text: formatted,
+      selection: TextSelection.collapsed(offset: formatted.length),
+    );
+  }
+}
+
+/// [TextInputFormatter] for Indian bank account numbers (digits only, max 18).
+class BharatBankAccountInputFormatter extends TextInputFormatter {
+  @override
+  TextEditingValue formatEditUpdate(
+    TextEditingValue oldValue,
+    TextEditingValue newValue,
+  ) {
+    if (newValue.text.isEmpty) return newValue;
+
+    final digits = newValue.text.replaceAll(RegExp(r'\D'), '');
+    final truncated = digits.length > 18 ? digits.substring(0, 18) : digits;
+
+    return TextEditingValue(
+      text: truncated,
+      selection: TextSelection.collapsed(offset: truncated.length),
+    );
+  }
+}
+
+/// [TextInputFormatter] for CVV / CVC input (digits only, max 4).
+class BharatCvvInputFormatter extends TextInputFormatter {
+  final int maxDigits;
+
+  BharatCvvInputFormatter({this.maxDigits = 4});
+
+  @override
+  TextEditingValue formatEditUpdate(
+    TextEditingValue oldValue,
+    TextEditingValue newValue,
+  ) {
+    if (newValue.text.isEmpty) return newValue;
+
+    final digits = newValue.text.replaceAll(RegExp(r'\D'), '');
+    final truncated =
+        digits.length > maxDigits ? digits.substring(0, maxDigits) : digits;
+
+    return TextEditingValue(
+      text: truncated,
+      selection: TextSelection.collapsed(offset: truncated.length),
+    );
+  }
+}
