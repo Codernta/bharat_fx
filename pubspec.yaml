@@ -6,13 +6,11 @@ repository: https://github.com/codernta/bharat_fx
 issue_tracker: https://github.com/codernta/bharat_fx/issues
 
 topics:
-  - localization
-  - india
-  - currency
   - fintech
+  - localization
+  - currency
   - security
   - input-validation
-  - forms
 
 environment:
   sdk: '>=3.0.0 <4.0.0'
