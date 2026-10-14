@@ -80,6 +80,17 @@ class BharatPiiRedactor {
     'account_number',
     'account_no',
     'acc_no',
+    'driving_license',
+    'dl_number',
+    'dl_no',
+    'voter_id',
+    'epic_no',
+    'passport',
+    'passport_number',
+    'passport_no',
+    'cin',
+    'tan',
+    'din',
   };
 
   /// Redacts all financial PII from arbitrary text, logs, or error strings.

@@ -254,3 +254,132 @@ class BharatCvvInputFormatter extends TextInputFormatter {
     );
   }
 }
+
+/// [TextInputFormatter] for MoRTH Indian Driving License.
+/// Automatically hyphens into `SS-RR-YYYY-NNNNNNN`.
+class BharatDrivingLicenseInputFormatter extends TextInputFormatter {
+  @override
+  TextEditingValue formatEditUpdate(
+    TextEditingValue oldValue,
+    TextEditingValue newValue,
+  ) {
+    if (newValue.text.isEmpty) return newValue;
+
+    final clean =
+        newValue.text.toUpperCase().replaceAll(RegExp(r'[^A-Z0-9]'), '');
+    final truncated = clean.length > 15 ? clean.substring(0, 15) : clean;
+
+    final buffer = StringBuffer();
+    for (int i = 0; i < truncated.length; i++) {
+      if (i == 2 || i == 4 || i == 8) {
+        buffer.write('-');
+      }
+      buffer.write(truncated[i]);
+    }
+
+    final formatted = buffer.toString();
+    return TextEditingValue(
+      text: formatted,
+      selection: TextSelection.collapsed(offset: formatted.length),
+    );
+  }
+}
+
+/// [TextInputFormatter] for Indian Voter ID / EPIC (max 10 alphanumeric, uppercase).
+class BharatVoterIdInputFormatter extends TextInputFormatter {
+  @override
+  TextEditingValue formatEditUpdate(
+    TextEditingValue oldValue,
+    TextEditingValue newValue,
+  ) {
+    if (newValue.text.isEmpty) return newValue;
+
+    final clean =
+        newValue.text.toUpperCase().replaceAll(RegExp(r'[^A-Z0-9]'), '');
+    final truncated = clean.length > 10 ? clean.substring(0, 10) : clean;
+
+    return TextEditingValue(
+      text: truncated,
+      selection: TextSelection.collapsed(offset: truncated.length),
+    );
+  }
+}
+
+/// [TextInputFormatter] for Indian Passport (max 8 alphanumeric, uppercase).
+class BharatPassportInputFormatter extends TextInputFormatter {
+  @override
+  TextEditingValue formatEditUpdate(
+    TextEditingValue oldValue,
+    TextEditingValue newValue,
+  ) {
+    if (newValue.text.isEmpty) return newValue;
+
+    final clean =
+        newValue.text.toUpperCase().replaceAll(RegExp(r'[^A-Z0-9]'), '');
+    final truncated = clean.length > 8 ? clean.substring(0, 8) : clean;
+
+    return TextEditingValue(
+      text: truncated,
+      selection: TextSelection.collapsed(offset: truncated.length),
+    );
+  }
+}
+
+/// [TextInputFormatter] for Corporate Identification Number (max 21 alphanumeric, uppercase).
+class BharatCinInputFormatter extends TextInputFormatter {
+  @override
+  TextEditingValue formatEditUpdate(
+    TextEditingValue oldValue,
+    TextEditingValue newValue,
+  ) {
+    if (newValue.text.isEmpty) return newValue;
+
+    final clean =
+        newValue.text.toUpperCase().replaceAll(RegExp(r'[^A-Z0-9]'), '');
+    final truncated = clean.length > 21 ? clean.substring(0, 21) : clean;
+
+    return TextEditingValue(
+      text: truncated,
+      selection: TextSelection.collapsed(offset: truncated.length),
+    );
+  }
+}
+
+/// [TextInputFormatter] for Tax Deduction Account Number (max 10 alphanumeric, uppercase).
+class BharatTanInputFormatter extends TextInputFormatter {
+  @override
+  TextEditingValue formatEditUpdate(
+    TextEditingValue oldValue,
+    TextEditingValue newValue,
+  ) {
+    if (newValue.text.isEmpty) return newValue;
+
+    final clean =
+        newValue.text.toUpperCase().replaceAll(RegExp(r'[^A-Z0-9]'), '');
+    final truncated = clean.length > 10 ? clean.substring(0, 10) : clean;
+
+    return TextEditingValue(
+      text: truncated,
+      selection: TextSelection.collapsed(offset: truncated.length),
+    );
+  }
+}
+
+/// [TextInputFormatter] for Director Identification Number (max 8 digits).
+class BharatDinInputFormatter extends TextInputFormatter {
+  @override
+  TextEditingValue formatEditUpdate(
+    TextEditingValue oldValue,
+    TextEditingValue newValue,
+  ) {
+    if (newValue.text.isEmpty) return newValue;
+
+    final clean = newValue.text.replaceAll(RegExp(r'\D'), '');
+    final truncated = clean.length > 8 ? clean.substring(0, 8) : clean;
+
+    return TextEditingValue(
+      text: truncated,
+      selection: TextSelection.collapsed(offset: truncated.length),
+    );
+  }
+}

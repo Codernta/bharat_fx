@@ -38,9 +38,18 @@
 - **🏦 Indian Bank Accounts & Merged IFSC (`BharatBankAccount` & `BharatIfsc`)**:
   - 9-to-18 digit account validation with bank-specific lengths (SBI, HDFC, ICICI, Axis, PNB, etc.) and timing-safe confirmation matching.
   - Detects defunct merged bank IFSC codes (Allahabad, Syndicate, Oriental, etc.) with migration advisories.
-- **🆔 UIDAI Aadhaar & Virtual ID (VID) (`BharatAadhaar` & `BharatVid`)**:
-  - 12-digit Aadhaar and 16-digit Virtual ID validation with official UIDAI **Verhoeff checksum**.
-  - UIDAI privacy masking (`XXXX XXXX 1234` and `XXXX XXXX XXXX 1234`).
+- **🆔 Comprehensive Government, Identity & Corporate IDs (`BharatId`)**:
+  - **UIDAI Aadhaar & Virtual ID (VID)**: 12-digit Aadhaar & 16-digit VID with official **Verhoeff checksum** and privacy masking.
+  - **MoRTH Driving License (`BharatDrivingLicense`)**: 15/16-char format parsing, state and RTO office lookup, issue year extraction, and auto-hyphenation.
+  - **Voter ID (EPIC) & Passport (`BharatVoterId` & `BharatPassport`)**: Standard 10-char ECI Voter IDs and 8-char MEA Passports with privacy masking.
+  - **Corporate & MCA Registrations (`BharatCin`, `BharatTan`, `BharatDin`)**: 21-char CIN with listing status, NIC industry, and corporate entity type; 10-char TAN; and 8-digit DIN.
+- **🧾 Indian GST & Tax Calculation Engine (`BharatGst`)**:
+  - Precision integer Paise arithmetic: automatic **Intra-State** (CGST + SGST equal split) vs **Inter-State** (IGST).
+  - Reverse / Inclusive GST calculation extracting taxable base amount and tax components from MRP.
+- **📅 Indian Fiscal & Market Settlement Calendar (`BharatFiscal`)**:
+  - Indian Financial Year (`FY 2024-25`) and Assessment Year (`AY 2025-26`) resolution (April-March cycle).
+  - Advance Tax installment due date schedules (June 15, Sep 15, Dec 15, Mar 15).
+  - RBI Bank Holiday calendar with `T+1` and `T+2` market settlement date calculation.
 - **⚡ 100% Dependency-Free**: Pure Flutter and Dart. Zero external package conflicts.
 
 ---
@@ -51,7 +60,7 @@ Add `bharat_fx` to your `pubspec.yaml`:
 
 ```yaml
 dependencies:
-  bharat_fx: ^1.0.3
+  bharat_fx: ^1.0.4
 ```
 
 Import the package:
@@ -281,7 +290,115 @@ BharatId.isVid("2345678901234567"); // true
 BharatId.maskVid("2345678901234567"); // "XXXX XXXX XXXX 4567"
 ```
 
+### 6. MoRTH Indian Driving License & RTO Resolver (`BharatDrivingLicense`)
+```dart
+// Validates 15/16-character MoRTH Driving Licenses and resolves issuing RTO
+final dl = BharatId.validateDrivingLicense("DL-01-2020-0012345");
+print(dl.isValid);       // true
+print(dl.stateName);     // "Delhi"
+print(dl.rtoName);       // "Mall Road, North Delhi"
+print(dl.issueYear);     // 2020
+
+// Auto-hyphenation and DPDP-compliant privacy masking
+BharatId.formatDrivingLicense("DL0120200012345"); // "DL-01-2020-0012345"
+BharatId.maskDrivingLicense("DL-01-2020-0012345");   // "DL-01-XXXX-XXX2345"
+```
+
+### 7. Voter ID (EPIC) & Indian Passport (`BharatVoterId` & `BharatPassport`)
+```dart
+// 10-Character ECI Electors Photo Identity Card (Voter ID)
+final voterId = BharatId.validateVoterId("ABC1234567");
+print(voterId.constituencyCode); // "ABC"
+BharatId.maskVoterId("ABC1234567"); // "ABCXXXX567"
+
+// 8-Character Ministry of External Affairs Indian Passport
+final passport = BharatId.validatePassport("K1234567");
+print(passport.seriesLetter); // "K"
+BharatId.maskPassport("K1234567"); // "KXXXXX67"
+```
+
+### 8. Corporate MCA Registrations: CIN, TAN, DIN (`BharatCin`, `BharatTan`, `BharatDin`)
+```dart
+// 21-Character Corporate Identification Number (CIN)
+final cin = BharatId.validateCin("U72200KA2020PTC123456");
+print(cin.isListed);               // false (Unlisted)
+print(cin.stateName);              // "Karnataka"
+print(cin.incorporationYear);      // 2020
+print(cin.companyTypeDescription); // "Private Limited Company"
+BharatId.maskCin("U72200KA2020PTC123456"); // "U72200KA2020XXX123456"
+
+// Tax Deduction Account Number (TAN)
+final tan = BharatId.validateTan("DELA12345B");
+print(tan.jurisdictionCode); // "DEL"
+BharatId.maskTan("DELA12345B"); // "DELXXXXXXB"
+
+// 8-Digit Director Identification Number (DIN)
+BharatId.validateDin("00123456"); // true
+BharatId.maskDin("00123456");     // "XXXX3456"
+```
+
 ---
+
+## 🧾 Indian GST & Tax Engine (`BharatGst`)
+
+Eliminate tax discrepancies with exact integer Paise GST calculations:
+
+```dart
+final subtotal = BharatMoney.fromRupees(1000.00);
+
+// Intra-state calculation (CGST 9% + SGST 9%)
+final intra = BharatGst.calculate(
+  taxableAmount: subtotal,
+  rate: 18.0,
+  isInterState: false,
+);
+print(intra.cgst);        // ₹90.00
+print(intra.sgst);        // ₹90.00
+print(intra.totalAmount); // ₹1,180.00
+
+// Auto-detect Inter-state (IGST) using GSTIN state codes
+final inter = BharatGst.calculate(
+  taxableAmount: subtotal,
+  rate: 18.0,
+  supplierGstin: '27AAPFU0939F1ZV', // MH
+  buyerGstin: '29AAPFU0939F1ZV',    // KA -> Inter-state
+);
+print(inter.isInterState); // true
+print(inter.igst);         // ₹180.00
+
+// Reverse/Inclusive GST (Extract taxable base and tax from ₹1,180 MRP)
+final reverse = BharatGst.reverseCalculate(
+  grossAmount: BharatMoney.fromRupees(1180.00),
+  rate: 18.0,
+);
+print(reverse.taxableAmount); // ₹1,000.00
+print(reverse.totalTax);      // ₹180.00
+```
+
+---
+
+## 📅 Indian Fiscal Calendar & Settlement (`BharatFiscal`)
+
+```dart
+// Indian Financial Year & Assessment Year (April-March cycle)
+BharatFiscal.financialYear(date: DateTime(2024, 7, 15)); // "FY 2024-25"
+BharatFiscal.assessmentYear(date: DateTime(2024, 7, 15)); // "AY 2025-26"
+BharatFiscal.quarter(date: DateTime(2024, 8, 1));        // FiscalQuarter.q2
+
+// Advance Tax Installment Due Dates
+final installments = BharatFiscal.advanceTaxDueDates(fiscalStartYear: 2024);
+// 15% by 15 June, 45% by 15 Sep, 75% by 15 Dec, 100% by 15 Mar
+
+// RBI Bank Holiday Engine
+BharatFiscal.isBankHoliday(DateTime(2024, 8, 15)); // true (Independence Day)
+BharatFiscal.isBankHoliday(DateTime(2024, 8, 10)); // true (2nd Saturday)
+
+// T+1 / T+2 Trade Settlement Date (skipping holidays & weekends)
+final settlement = BharatFiscal.calculateSettlementDate(
+  DateTime(2024, 8, 14), // Wednesday before Aug 15
+  settlementDays: 1,
+); // Resolves to Friday, Aug 16 (skipping holiday)
+```
 
 ## 🔒 Hardened Fintech Input Field: `BharatTextField`
 
@@ -323,6 +440,22 @@ BharatTextField(
   type: BharatTextFieldType.money,
   onMoneyResolved: (money) {
     print("Amount in paise: ${money.inPaise}");
+  },
+)
+
+// MoRTH Driving License field with RTO resolver
+BharatTextField(
+  type: BharatTextFieldType.drivingLicense,
+  onDrivingLicenseResolved: (dl) {
+    print("State: ${dl.stateName}, RTO: ${dl.rtoName}");
+  },
+)
+
+// Corporate CIN field
+BharatTextField(
+  type: BharatTextFieldType.cin,
+  onCinResolved: (cin) {
+    print("Company: ${cin.companyTypeDescription}");
   },
 )
 ```

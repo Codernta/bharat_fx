@@ -1,5 +1,37 @@
 # Changelog
 
+## 1.0.4
+
+* **🆔 Indian Identity & KYC Expansion (`BharatId`)**:
+  * **MoRTH Driving License (`BharatDrivingLicense` / `BharatDl`)**: Validates 15/16-character MoRTH DLs, auto-hyphenates to `SS-RR-YYYY-NNNNNNN`, resolves state name, issuing RTO office, and issue year, with privacy masking (`DL-01-XXXX-XXX2345`).
+  * **Voter ID / EPIC (`BharatVoterId` / `BharatEpic`)**: Validates 10-character Election Commission of India (ECI) Voter IDs, extracts assembly constituency code and serial number, with compliant masking (`ABCXXXX567`).
+  * **Indian Passport (`BharatPassport`)**: Validates Ministry of External Affairs 8-character Indian passport format (series letter + 7 digits, rejecting invalid series like Q), with compliant masking (`KXXXXX67`).
+  * **Corporate & MCA Identification (`BharatCin`, `BharatTan`, `BharatDin`)**:
+    * **CIN (Corporate Identification Number)**: 21-character validator extracting listing status (Listed/Unlisted), 5-digit industry code, state, incorporation year, company classification (PTC, PLC, FTC, GOI, etc.), and registration number with privacy masking.
+    * **TAN (Tax Deduction Account Number)**: 10-character validator with jurisdiction, deductor initial, and check letter extraction.
+    * **DIN (Director Identification Number)**: 8-digit MCA director number validator and masking.
+* **🧾 Indian Goods & Services Tax Engine (`BharatGst`)**:
+  * Precision integer Paise tax arithmetic using `BharatMoney`.
+  * Automatic tax bifurcation: **Intra-State** (50% CGST + 50% SGST) vs **Inter-State** (100% IGST).
+  * Auto-detection of inter-state transactions from GSTINs or 2-digit GST state codes.
+  * Reverse / Inclusive GST calculation (extract base taxable price and tax components from MRP).
+  * Complete official 2-digit GST State / UT code directory.
+* **📅 Indian Fiscal & Settlement Calendar (`BharatFiscal`)**:
+  * Financial Year (`FY 2024-25`) and Assessment Year (`AY 2025-26`) resolution (April 1 – March 31 cycle).
+  * Indian Fiscal Quarters (Q1: Apr-Jun, Q2: Jul-Sep, Q3: Oct-Dec, Q4: Jan-Mar).
+  * Statutory Advance Tax installment schedule (15% by June 15, 45% by Sep 15, 75% by Dec 15, 100% by Mar 15).
+  * RBI Banking Holiday engine: identifies Sundays, 2nd & 4th Saturdays, and national gazetted holidays (Jan 26, May 1, Aug 15, Oct 2).
+  * Market settlement date calculator (`T+1` and `T+2` settlement skipping Indian banking holidays and weekends).
+* **🔒 Enhanced Fintech Input Field (`BharatTextField`)**:
+  * Added new input presets: `drivingLicense`, `voterId`, `passport`, `cin`, `tan`, and `din`.
+  * Added dedicated text input formatters and automatic credential protection (suppresses cloud keyboard suggestions and autocorrect).
+  * Added callbacks: `onDrivingLicenseResolved` and `onCinResolved`.
+* **🛡️ Security & PII Redactor (`BharatPiiRedactor`)**:
+  * Added sensitive key suppression for `driving_license`, `voter_id`, `passport`, `cin`, `tan`, and `din` in JSON telemetry scrubbers (DPDP Act 2023 compliant).
+* **✨ 100% Backward Compatible**:
+  * Zero breaking changes to existing APIs, signatures, or behavior.
+  * 100% pure Dart & Flutter with zero external package dependencies.
+
 ## 1.0.3
 
 * **🛡️ Enterprise Fintech Security Module (`BharatSecurity`)**:

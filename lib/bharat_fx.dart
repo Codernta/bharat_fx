@@ -20,11 +20,15 @@ export 'src/security/pii_redactor.dart';
 export 'src/security/sensitive_data.dart';
 export 'src/security/timing_safe.dart';
 
-// Currency & Precision Money Module
+// Currency, GST & Precision Money Module
 export 'src/currency/bharat_currency.dart';
+export 'src/currency/bharat_gst.dart';
 export 'src/currency/bharat_money.dart';
 export 'src/currency/number_to_words.dart';
 export 'src/currency/words_languages.dart';
+
+// Indian Fiscal & Settlement Calendar Module
+export 'src/fiscal/bharat_fiscal.dart';
 
 // Address & PIN Code Module
 export 'src/input/pin_code_data.dart';
@@ -52,14 +56,18 @@ export 'src/id/bank_account_validator.dart';
 export 'src/id/bharat_id.dart';
 export 'src/id/card_token.dart';
 export 'src/id/card_validator.dart';
+export 'src/id/corporate_id_validator.dart';
+export 'src/id/driving_license_validator.dart';
 export 'src/id/gstin_validator.dart';
 export 'src/id/id_formatters.dart';
 export 'src/id/ifsc_validator.dart';
 export 'src/id/pan_validator.dart';
+export 'src/id/passport_validator.dart';
 export 'src/id/phone_validator.dart';
 export 'src/id/upi_intent.dart';
 export 'src/id/upi_validator.dart';
 export 'src/id/vid_validator.dart';
+export 'src/id/voter_id_validator.dart';
 
 // Specialized & Hardened Widgets
 export 'src/widgets/bharat_currency_text.dart';

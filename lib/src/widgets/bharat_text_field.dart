@@ -5,13 +5,17 @@ import '../currency/bharat_money.dart';
 import '../id/aadhaar_validator.dart';
 import '../id/bank_account_validator.dart';
 import '../id/card_validator.dart';
+import '../id/corporate_id_validator.dart';
+import '../id/driving_license_validator.dart';
 import '../id/gstin_validator.dart';
 import '../id/id_formatters.dart';
 import '../id/ifsc_validator.dart';
 import '../id/pan_validator.dart';
+import '../id/passport_validator.dart';
 import '../id/phone_validator.dart';
 import '../id/upi_validator.dart';
 import '../id/vid_validator.dart';
+import '../id/voter_id_validator.dart';
 import '../input/pin_code_data.dart';
 import '../input/pin_code_formatter.dart';
 import '../input/pin_code_validator.dart';
@@ -39,6 +43,12 @@ enum BharatTextFieldType {
   phone,
   gstin,
   ifsc,
+  drivingLicense,
+  voterId,
+  passport,
+  cin,
+  tan,
+  din,
   vernacularPhonetic,
   vernacularRestricted,
   custom,
@@ -67,6 +77,8 @@ class BharatTextField extends StatefulWidget {
   final ValueChanged<CardValidationResult>? onCardResolved;
   final ValueChanged<BankAccountValidationResult>? onBankAccountResolved;
   final ValueChanged<BharatMoney>? onMoneyResolved;
+  final ValueChanged<DrivingLicenseValidationResult>? onDrivingLicenseResolved;
+  final ValueChanged<CinValidationResult>? onCinResolved;
   final bool showLiveValidationIndicator;
 
   // Fintech Security options
@@ -98,6 +110,8 @@ class BharatTextField extends StatefulWidget {
     this.onCardResolved,
     this.onBankAccountResolved,
     this.onMoneyResolved,
+    this.onDrivingLicenseResolved,
+    this.onCinResolved,
     this.showLiveValidationIndicator = true,
     this.bankCode,
     this.obscureText,
@@ -248,6 +262,41 @@ class _BharatTextFieldState extends State<BharatTextField> {
           widget.onMoneyResolved?.call(money);
         }
         break;
+      case BharatTextFieldType.drivingLicense:
+        final dlResult = BharatDrivingLicense.validate(text);
+        valid = dlResult.isValid;
+        if (valid) {
+          helper =
+              '${dlResult.stateName ?? ""} ${dlResult.rtoName ?? ""} (${dlResult.issueYear ?? ""})'
+                  .trim();
+          widget.onDrivingLicenseResolved?.call(dlResult);
+        }
+        break;
+      case BharatTextFieldType.voterId:
+        final voterResult = BharatVoterId.validate(text);
+        valid = voterResult.isValid;
+        break;
+      case BharatTextFieldType.passport:
+        final passResult = BharatPassport.validate(text);
+        valid = passResult.isValid;
+        break;
+      case BharatTextFieldType.cin:
+        final cinResult = BharatCin.validate(text);
+        valid = cinResult.isValid;
+        if (valid) {
+          helper =
+              '${cinResult.companyTypeDescription ?? ""} (${cinResult.stateName ?? ""})';
+          widget.onCinResolved?.call(cinResult);
+        }
+        break;
+      case BharatTextFieldType.tan:
+        final tanResult = BharatTan.validate(text);
+        valid = tanResult.isValid;
+        break;
+      case BharatTextFieldType.din:
+        final dinResult = BharatDin.validate(text);
+        valid = dinResult.isValid;
+        break;
       case BharatTextFieldType.vernacularPhonetic:
       case BharatTextFieldType.vernacularRestricted:
       case BharatTextFieldType.custom:
@@ -299,6 +348,12 @@ class _BharatTextFieldState extends State<BharatTextField> {
       BharatTextFieldType.cvv => false,
       BharatTextFieldType.bankAccount => false,
       BharatTextFieldType.pinCode => false,
+      BharatTextFieldType.drivingLicense => false,
+      BharatTextFieldType.voterId => false,
+      BharatTextFieldType.passport => false,
+      BharatTextFieldType.cin => false,
+      BharatTextFieldType.tan => false,
+      BharatTextFieldType.din => false,
       _ => true,
     };
   }
@@ -315,6 +370,12 @@ class _BharatTextFieldState extends State<BharatTextField> {
       BharatTextFieldType.card => false,
       BharatTextFieldType.cvv => false,
       BharatTextFieldType.bankAccount => false,
+      BharatTextFieldType.drivingLicense => false,
+      BharatTextFieldType.voterId => false,
+      BharatTextFieldType.passport => false,
+      BharatTextFieldType.cin => false,
+      BharatTextFieldType.tan => false,
+      BharatTextFieldType.din => false,
       _ => true,
     };
   }
@@ -470,6 +531,57 @@ class _BharatTextFieldState extends State<BharatTextField> {
         prefixIcon = const Icon(Icons.account_balance_outlined);
         break;
 
+      case BharatTextFieldType.drivingLicense:
+        keyboardType = TextInputType.text;
+        formatters = [BharatDrivingLicenseInputFormatter()];
+        label = 'Driving License (DL)';
+        hint = 'DL-01-2020-0012345';
+        prefixIcon = const Icon(Icons.drive_eta_outlined);
+        break;
+
+      case BharatTextFieldType.voterId:
+        keyboardType = TextInputType.text;
+        formatters = [BharatVoterIdInputFormatter()];
+        label = 'Voter ID (EPIC)';
+        hint = 'ABC1234567';
+        prefixIcon = const Icon(Icons.how_to_vote_outlined);
+        break;
+
+      case BharatTextFieldType.passport:
+        keyboardType = TextInputType.text;
+        formatters = [BharatPassportInputFormatter()];
+        label = 'Passport Number';
+        hint = 'A1234567';
+        prefixIcon = const Icon(Icons.flight_takeoff_outlined);
+        break;
+
+      case BharatTextFieldType.cin:
+        keyboardType = TextInputType.text;
+        formatters = [BharatCinInputFormatter()];
+        label = 'Corporate CIN';
+        hint = 'U72200KA2020PTC123456';
+        prefixIcon = const Icon(Icons.domain_outlined);
+        break;
+
+      case BharatTextFieldType.tan:
+        keyboardType = TextInputType.text;
+        formatters = [BharatTanInputFormatter()];
+        label = 'TAN Number';
+        hint = 'DELA12345B';
+        prefixIcon = const Icon(Icons.description_outlined);
+        break;
+
+      case BharatTextFieldType.din:
+        keyboardType = TextInputType.number;
+        formatters = [
+          FilteringTextInputFormatter.digitsOnly,
+          BharatDinInputFormatter(),
+        ];
+        label = 'Director DIN';
+        hint = '00123456';
+        prefixIcon = const Icon(Icons.person_pin_outlined);
+        break;
+
       case BharatTextFieldType.vernacularPhonetic:
         keyboardType = TextInputType.text;
         formatters = [
@@ -610,6 +722,24 @@ class _BharatTextFieldState extends State<BharatTextField> {
           return m != null && m.isPositive
               ? null
               : 'Please enter a valid monetary amount';
+        case BharatTextFieldType.drivingLicense:
+          final dl = BharatDrivingLicense.validate(value);
+          return dl.isValid ? null : dl.errorMessage;
+        case BharatTextFieldType.voterId:
+          final v = BharatVoterId.validate(value);
+          return v.isValid ? null : v.errorMessage;
+        case BharatTextFieldType.passport:
+          final pass = BharatPassport.validate(value);
+          return pass.isValid ? null : pass.errorMessage;
+        case BharatTextFieldType.cin:
+          final cin = BharatCin.validate(value);
+          return cin.isValid ? null : cin.errorMessage;
+        case BharatTextFieldType.tan:
+          final tan = BharatTan.validate(value);
+          return tan.isValid ? null : tan.errorMessage;
+        case BharatTextFieldType.din:
+          final din = BharatDin.validate(value);
+          return din.isValid ? null : din.errorMessage;
         case BharatTextFieldType.vernacularPhonetic:
         case BharatTextFieldType.vernacularRestricted:
         case BharatTextFieldType.custom:
