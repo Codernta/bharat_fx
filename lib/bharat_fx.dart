@@ -27,8 +27,11 @@ export 'src/currency/bharat_money.dart';
 export 'src/currency/number_to_words.dart';
 export 'src/currency/words_languages.dart';
 
-// Indian Fiscal & Settlement Calendar Module
+// Indian Fiscal, GST Invoicing & Compliance Module
 export 'src/fiscal/bharat_fiscal.dart';
+export 'src/fiscal/bharat_hsn.dart';
+export 'src/fiscal/gst_invoice_format.dart';
+export 'src/fiscal/gst_qr_parser.dart';
 
 // Address & PIN Code Module
 export 'src/input/pin_code_data.dart';

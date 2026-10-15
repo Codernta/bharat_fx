@@ -1,5 +1,22 @@
 # Changelog
 
+## 1.0.5
+
+* **📑 Indian GST Invoice Helpers, HSN/SAC & e-Invoice QR (`BharatHsn`, `BharatSac`, `BharatGstInvoice`, `BharatGstQr`)**:
+  * **HSN & SAC Code Validation (`BharatHsn`, `BharatSac`)**:
+    * Validates 2, 4, 6, and 8-digit HSN codes for goods with offline lookup of all 98 standard chapters (01–98).
+    * Validates 6-digit Services Accounting Codes (SAC) starting with Chapter 99 and resolves major service categories (IT, consulting, construction, transport, etc.).
+    * Statutory GST turnover compliance checker (`isTurnoverCompliant`) based on Central Tax Notification No. 78/2020 (min 4 digits for turnover $\le$ ₹5 Cr, min 6 digits for turnover $>$ ₹5 Cr, 8 digits for export/import).
+  * **CGST Rule 46(b) Invoice Number Validator (`BharatGstInvoice`)**:
+    * Strictly validates tax invoice serial numbers against statutory Rule 46(b) requirements: max 16 characters, alphanumeric characters restricted strictly to hyphens (`-`) and slashes (`/`).
+    * Prohibited character diagnostic reporter (detects spaces, underscores, dots, and special characters rejected by the GST portal).
+    * Automatic invoice number sanitizer (`sanitizeInvoiceNumber`) and compliant serial generator (`buildInvoiceNumber`).
+    * Standard GST Document Types (`GstDocumentType`): `taxInvoice`, `creditNote`, `debitNote`, `billOfSupply`, `deliveryChallan`.
+  * **Offline B2B e-Invoice QR Code Parser (`BharatGstQr`)**:
+    * Pure Dart, zero-dependency offline parser for Invoice Registration Portal (NIC / IRP) signed e-invoice QR code JWT payloads.
+    * Extracts supplier & recipient GSTINs, document number, document date, total invoice amount, line item count, main HSN code, and IRN.
+    * 64-character SHA-256 Invoice Reference Number (IRN) format validator.
+
 ## 1.0.4
 
 * **🆔 Indian Identity & KYC Expansion (`BharatId`)**:

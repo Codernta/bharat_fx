@@ -377,6 +377,47 @@ print(reverse.totalTax);      // ₹180.00
 
 ---
 
+## 📑 Indian GST Invoicing, HSN/SAC & e-Invoice QR
+
+Zero-dependency compliance helpers for GST invoice serialization, HSN/SAC classification, and B2B e-invoice QR decoding:
+
+```dart
+// 1. HSN (Goods) & SAC (Services) Validation with Offline Chapter Lookup
+final hsn = BharatHsn.validate('851712');
+print(hsn.isValid);             // true (6 digits)
+print(hsn.chapterDescription);  // "Electrical machinery and equipment..."
+
+// Turnover compliance (Notification 78/2020: 4 digits <= ₹5 Cr, 6 digits > ₹5 Cr)
+final compliant = BharatHsn.isTurnoverCompliant(
+  hsnCode: '8517',
+  turnoverInCrores: 3.5, // true (B2B requires min 4 digits)
+);
+
+final sac = BharatSac.validate('998314');
+print(sac.isValid);         // true (starts with 99)
+print(sac.serviceCategory); // "Other professional, technical and business services..."
+
+// 2. CGST Rule 46(b) Tax Invoice Serial Number Validation
+// Strictly validates: max 16 chars, allowed chars [A-Za-z0-9/-]
+final invCheck = BharatGstInvoice.validateInvoiceNumber('INV/24-25/0001');
+print(invCheck.isValid); // true
+
+// Sanitize irregular invoice numbers into compliant format
+final cleanInv = BharatGstInvoice.sanitizeInvoiceNumber('INV 2024_01#99');
+print(cleanInv); // "INV-2024-01-99"
+
+// 3. Offline B2B e-Invoice QR Code Decoder (Decodes NIC/IRP JWT without network calls)
+final qrResult = BharatGstQr.parseEInvoiceQr(scannedQrString);
+if (qrResult.isValid) {
+  print(qrResult.sellerGstin);        // "27ABCDE1234F1Z5"
+  print(qrResult.documentNumber);     // "INV/24-25/0042"
+  print(qrResult.totalInvoiceValue);  // 18550.0
+  print(qrResult.irn);                // 64-character SHA-256 IRN hash
+}
+```
+
+---
+
 ## 📅 Indian Fiscal Calendar & Settlement (`BharatFiscal`)
 
 ```dart
