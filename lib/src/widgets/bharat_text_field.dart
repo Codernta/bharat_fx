@@ -128,6 +128,7 @@ class BharatTextField extends StatefulWidget {
 }
 
 class _BharatTextFieldState extends State<BharatTextField> {
+  static final RegExp _nonDigitsRegex = RegExp(r'\D');
   late TextEditingController _controller;
   bool _isValid = false;
   String? _helperText;
@@ -195,7 +196,7 @@ class _BharatTextFieldState extends State<BharatTextField> {
         }
         break;
       case BharatTextFieldType.pinCode:
-        final digits = text.replaceAll(RegExp(r'\D'), '');
+        final digits = text.replaceAll(_nonDigitsRegex, '');
         if (digits.length == 6) {
           final pinInfo = BharatPinCode.lookup(digits);
           valid = pinInfo.isValid;
@@ -393,7 +394,7 @@ class _BharatTextFieldState extends State<BharatTextField> {
         keyboardType = TextInputType.number;
         formatters = [
           FilteringTextInputFormatter.digitsOnly,
-          BharatAadhaarInputFormatter(),
+          const BharatAadhaarInputFormatter(),
         ];
         label = 'Aadhaar Number';
         hint = 'XXXX XXXX XXXX';
@@ -404,7 +405,7 @@ class _BharatTextFieldState extends State<BharatTextField> {
         keyboardType = TextInputType.number;
         formatters = [
           FilteringTextInputFormatter.digitsOnly,
-          BharatVidInputFormatter(),
+          const BharatVidInputFormatter(),
         ];
         label = 'Virtual ID (VID)';
         hint = 'XXXX XXXX XXXX XXXX';
@@ -413,7 +414,7 @@ class _BharatTextFieldState extends State<BharatTextField> {
 
       case BharatTextFieldType.pan:
         keyboardType = TextInputType.text;
-        formatters = [BharatPanInputFormatter()];
+        formatters = const [BharatPanInputFormatter()];
         label = 'PAN Card Number';
         hint = 'ABCDE1234F';
         prefixIcon = const Icon(Icons.credit_card_outlined);
@@ -423,7 +424,7 @@ class _BharatTextFieldState extends State<BharatTextField> {
         keyboardType = TextInputType.number;
         formatters = [
           FilteringTextInputFormatter.digitsOnly,
-          BharatCardInputFormatter(),
+          const BharatCardInputFormatter(),
         ];
         label = 'Card Number (RuPay / Visa / MC)';
         hint = 'XXXX XXXX XXXX XXXX';
@@ -434,7 +435,7 @@ class _BharatTextFieldState extends State<BharatTextField> {
         keyboardType = TextInputType.number;
         formatters = [
           FilteringTextInputFormatter.digitsOnly,
-          BharatCvvInputFormatter(),
+          const BharatCvvInputFormatter(),
         ];
         label = 'CVV';
         hint = '•••';
@@ -445,7 +446,7 @@ class _BharatTextFieldState extends State<BharatTextField> {
         keyboardType = TextInputType.number;
         formatters = [
           FilteringTextInputFormatter.digitsOnly,
-          BharatBankAccountInputFormatter(),
+          const BharatBankAccountInputFormatter(),
         ];
         label = 'Bank Account Number';
         hint = '9 to 18 digits';
@@ -454,7 +455,7 @@ class _BharatTextFieldState extends State<BharatTextField> {
 
       case BharatTextFieldType.upi:
         keyboardType = TextInputType.emailAddress;
-        formatters = [BharatUpiInputFormatter()];
+        formatters = const [BharatUpiInputFormatter()];
         label = 'UPI ID / VPA';
         hint = 'username@okhdfcbank';
         prefixIcon = const Icon(Icons.account_balance_wallet_outlined);
@@ -465,7 +466,7 @@ class _BharatTextFieldState extends State<BharatTextField> {
         formatters = [
           FilteringTextInputFormatter.digitsOnly,
           LengthLimitingTextInputFormatter(6),
-          BharatPinCodeInputFormatter(),
+          const BharatPinCodeInputFormatter(),
         ];
         label = 'PIN Code';
         hint = '560001';
@@ -474,7 +475,7 @@ class _BharatTextFieldState extends State<BharatTextField> {
 
       case BharatTextFieldType.vehiclePlate:
         keyboardType = TextInputType.text;
-        formatters = [BharatVehicleInputFormatter()];
+        formatters = const [BharatVehicleInputFormatter()];
         label = 'Vehicle Number';
         hint = 'DL 01 AB 1234 or 21 BH 1234 AA';
         prefixIcon = const Icon(Icons.directions_car_outlined);
@@ -483,7 +484,7 @@ class _BharatTextFieldState extends State<BharatTextField> {
       case BharatTextFieldType.currency:
       case BharatTextFieldType.money:
         keyboardType = const TextInputType.numberWithOptions(decimal: true);
-        formatters = [BharatCurrencyInputFormatter()];
+        formatters = const [BharatCurrencyInputFormatter()];
         label = 'Amount (₹)';
         hint = '1,50,000';
         prefixIcon = const Padding(
@@ -502,7 +503,7 @@ class _BharatTextFieldState extends State<BharatTextField> {
         keyboardType = TextInputType.phone;
         formatters = [
           FilteringTextInputFormatter.digitsOnly,
-          BharatPhoneInputFormatter(),
+          const BharatPhoneInputFormatter(),
         ];
         label = 'Mobile Number';
         hint = '98765 43210';
@@ -517,7 +518,7 @@ class _BharatTextFieldState extends State<BharatTextField> {
 
       case BharatTextFieldType.gstin:
         keyboardType = TextInputType.text;
-        formatters = [BharatGstinInputFormatter()];
+        formatters = const [BharatGstinInputFormatter()];
         label = 'GSTIN';
         hint = '27AAPFU0939F1ZV';
         prefixIcon = const Icon(Icons.receipt_long_outlined);
@@ -525,7 +526,7 @@ class _BharatTextFieldState extends State<BharatTextField> {
 
       case BharatTextFieldType.ifsc:
         keyboardType = TextInputType.text;
-        formatters = [BharatIfscInputFormatter()];
+        formatters = const [BharatIfscInputFormatter()];
         label = 'IFSC Code';
         hint = 'SBIN0000123';
         prefixIcon = const Icon(Icons.account_balance_outlined);
@@ -533,7 +534,7 @@ class _BharatTextFieldState extends State<BharatTextField> {
 
       case BharatTextFieldType.drivingLicense:
         keyboardType = TextInputType.text;
-        formatters = [BharatDrivingLicenseInputFormatter()];
+        formatters = const [BharatDrivingLicenseInputFormatter()];
         label = 'Driving License (DL)';
         hint = 'DL-01-2020-0012345';
         prefixIcon = const Icon(Icons.drive_eta_outlined);
@@ -541,7 +542,7 @@ class _BharatTextFieldState extends State<BharatTextField> {
 
       case BharatTextFieldType.voterId:
         keyboardType = TextInputType.text;
-        formatters = [BharatVoterIdInputFormatter()];
+        formatters = const [BharatVoterIdInputFormatter()];
         label = 'Voter ID (EPIC)';
         hint = 'ABC1234567';
         prefixIcon = const Icon(Icons.how_to_vote_outlined);
@@ -549,7 +550,7 @@ class _BharatTextFieldState extends State<BharatTextField> {
 
       case BharatTextFieldType.passport:
         keyboardType = TextInputType.text;
-        formatters = [BharatPassportInputFormatter()];
+        formatters = const [BharatPassportInputFormatter()];
         label = 'Passport Number';
         hint = 'A1234567';
         prefixIcon = const Icon(Icons.flight_takeoff_outlined);
@@ -557,7 +558,7 @@ class _BharatTextFieldState extends State<BharatTextField> {
 
       case BharatTextFieldType.cin:
         keyboardType = TextInputType.text;
-        formatters = [BharatCinInputFormatter()];
+        formatters = const [BharatCinInputFormatter()];
         label = 'Corporate CIN';
         hint = 'U72200KA2020PTC123456';
         prefixIcon = const Icon(Icons.domain_outlined);
@@ -565,7 +566,7 @@ class _BharatTextFieldState extends State<BharatTextField> {
 
       case BharatTextFieldType.tan:
         keyboardType = TextInputType.text;
-        formatters = [BharatTanInputFormatter()];
+        formatters = const [BharatTanInputFormatter()];
         label = 'TAN Number';
         hint = 'DELA12345B';
         prefixIcon = const Icon(Icons.description_outlined);
@@ -575,7 +576,7 @@ class _BharatTextFieldState extends State<BharatTextField> {
         keyboardType = TextInputType.number;
         formatters = [
           FilteringTextInputFormatter.digitsOnly,
-          BharatDinInputFormatter(),
+          const BharatDinInputFormatter(),
         ];
         label = 'Director DIN';
         hint = '00123456';

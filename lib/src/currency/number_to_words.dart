@@ -2,6 +2,8 @@ import 'words_languages.dart';
 
 /// Utility class to convert numbers into words in regional Indian languages.
 class BharatNumberToWords {
+  static final RegExp _multipleSpacesRegex = RegExp(r'\s+');
+
   /// Converts an integer or double into words in the specified Indian language.
   ///
   /// Example:
@@ -67,7 +69,8 @@ class BharatNumberToWords {
       parts.add(dict.onlyWord);
     }
 
-    var result = parts.join(' ').replaceAll(RegExp(r'\s+'), ' ').trim();
+    var result =
+        parts.join(' ').replaceAll(_multipleSpacesRegex, ' ').trim();
     if (isNegative) {
       result = 'Minus $result';
     }

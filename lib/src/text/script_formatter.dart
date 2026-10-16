@@ -42,6 +42,15 @@ class BharatScriptInputFormatter extends TextInputFormatter {
   ) {
     if (newValue.text.isEmpty) return newValue;
 
+    bool allValid = true;
+    for (final rune in newValue.text.runes) {
+      if (!_isAllowed(rune)) {
+        allValid = false;
+        break;
+      }
+    }
+    if (allValid) return newValue;
+
     final buffer = StringBuffer();
     for (final rune in newValue.text.runes) {
       if (_isAllowed(rune)) {

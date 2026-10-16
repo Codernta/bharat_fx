@@ -11,17 +11,20 @@ enum BharatCardType {
 
 /// Standard Luhn algorithm (Modulo 10) checksum validator used by credit & debit cards worldwide.
 class LuhnAlgorithm {
+  static final RegExp _nonDigitsRegex = RegExp(r'\D');
+
   /// Validates a numerical card number string against the Luhn checksum.
   static bool validate(String? number) {
     if (number == null) return false;
-    final digits = number.replaceAll(RegExp(r'\D'), '');
+    final digits = number.replaceAll(_nonDigitsRegex, '');
     if (digits.length < 12 || digits.length > 19) return false;
 
     int sum = 0;
     bool alternate = false;
 
     for (int i = digits.length - 1; i >= 0; i--) {
-      int n = int.parse(digits[i]);
+      int n = digits.codeUnitAt(i) - 48;
+      if (n < 0 || n > 9) return false;
       if (alternate) {
         n *= 2;
         if (n > 9) {
@@ -37,12 +40,13 @@ class LuhnAlgorithm {
 
   /// Calculates the Luhn check digit for an incomplete numerical string.
   static int generateCheckDigit(String numberWithoutCheck) {
-    final digits = numberWithoutCheck.replaceAll(RegExp(r'\D'), '');
+    final digits = numberWithoutCheck.replaceAll(_nonDigitsRegex, '');
     int sum = 0;
     bool alternate = true;
 
     for (int i = digits.length - 1; i >= 0; i--) {
-      int n = int.parse(digits[i]);
+      int n = digits.codeUnitAt(i) - 48;
+      if (n < 0 || n > 9) return 0;
       if (alternate) {
         n *= 2;
         if (n > 9) {
@@ -89,11 +93,15 @@ class CardValidationResult {
 /// Validator, identifier, and PCI DSS 4.0 compliant masker for Indian RuPay,
 /// Visa, Mastercard, and other payment cards.
 class BharatCard {
+  static final RegExp _nonDigitsRegex = RegExp(r'\D');
+  static final RegExp _expirySplitRegex = RegExp(r'[/\-]');
+  static final RegExp _digitsOnlyRegex = RegExp(r'^\d+$');
+
   /// Determines the card network / scheme based on BIN prefix.
   ///
   /// Specialized support for NPCI RuPay ranges (60, 65, 81, 82, 508, 353, 356).
   static BharatCardType getCardType(String number) {
-    final digits = number.replaceAll(RegExp(r'\D'), '');
+    final digits = number.replaceAll(_nonDigitsRegex, '');
     if (digits.isEmpty) return BharatCardType.unknown;
 
     // RuPay checks (NPCI domestic card network)
@@ -167,7 +175,7 @@ class BharatCard {
       );
     }
 
-    final digits = cardNumber.replaceAll(RegExp(r'\D'), '');
+    final digits = cardNumber.replaceAll(_nonDigitsRegex, '');
 
     if (digits.length < 13 || digits.length > 19) {
       return CardValidationResult(
@@ -235,7 +243,7 @@ class BharatCard {
   /// Validates an expiration string formatted as `MM/YY` or `MM/YYYY`.
   static bool validateExpiryString(String? expiry) {
     if (expiry == null || expiry.trim().isEmpty) return false;
-    final parts = expiry.trim().split(RegExp(r'[/\-]'));
+    final parts = expiry.trim().split(_expirySplitRegex);
     if (parts.length != 2) return false;
 
     final month = int.tryParse(parts[0].trim());
@@ -251,7 +259,7 @@ class BharatCard {
   static bool validateCvv(String? cvv, {BharatCardType? cardType}) {
     if (cvv == null) return false;
     final clean = cvv.trim();
-    if (!RegExp(r'^\d+$').hasMatch(clean)) return false;
+    if (!_digitsOnlyRegex.hasMatch(clean)) return false;
 
     if (cardType == BharatCardType.amex) {
       return clean.length == 4;
@@ -269,7 +277,7 @@ class BharatCard {
     String maskChar = 'X',
     bool preserveBin = false,
   }) {
-    final digits = cardNumber.replaceAll(RegExp(r'\D'), '');
+    final digits = cardNumber.replaceAll(_nonDigitsRegex, '');
     if (digits.length < 12) return cardNumber;
 
     final lastFour = digits.substring(digits.length - 4);
@@ -289,7 +297,7 @@ class BharatCard {
 
   /// Formats a card number into 4-digit spaced groups.
   static String format(String cardNumber) {
-    final digits = cardNumber.replaceAll(RegExp(r'\D'), '');
+    final digits = cardNumber.replaceAll(_nonDigitsRegex, '');
     final buffer = StringBuffer();
 
     for (int i = 0; i < digits.length; i++) {

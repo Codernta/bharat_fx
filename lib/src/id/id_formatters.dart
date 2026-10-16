@@ -1,8 +1,14 @@
 import 'package:flutter/services.dart';
 
+final RegExp _nonDigitsRegex = RegExp(r'\D');
+final RegExp _nonAlphanumericRegex = RegExp(r'[^A-Z0-9]');
+final RegExp _upiAllowedRegex = RegExp(r'[^a-z0-9.\-_@]');
+
 /// [TextInputFormatter] for 12-digit Indian Aadhaar numbers.
 /// Automatically spaces into 4-digit groups: `XXXX XXXX XXXX`.
 class BharatAadhaarInputFormatter extends TextInputFormatter {
+  const BharatAadhaarInputFormatter();
+
   @override
   TextEditingValue formatEditUpdate(
     TextEditingValue oldValue,
@@ -10,7 +16,7 @@ class BharatAadhaarInputFormatter extends TextInputFormatter {
   ) {
     if (newValue.text.isEmpty) return newValue;
 
-    final digits = newValue.text.replaceAll(RegExp(r'\D'), '');
+    final digits = newValue.text.replaceAll(_nonDigitsRegex, '');
     final truncated = digits.length > 12 ? digits.substring(0, 12) : digits;
 
     final buffer = StringBuffer();
@@ -32,6 +38,8 @@ class BharatAadhaarInputFormatter extends TextInputFormatter {
 /// [TextInputFormatter] for Indian PAN card input.
 /// Enforces uppercase and maximum 10 alphanumeric characters.
 class BharatPanInputFormatter extends TextInputFormatter {
+  const BharatPanInputFormatter();
+
   @override
   TextEditingValue formatEditUpdate(
     TextEditingValue oldValue,
@@ -40,7 +48,7 @@ class BharatPanInputFormatter extends TextInputFormatter {
     if (newValue.text.isEmpty) return newValue;
 
     final uppercase = newValue.text.toUpperCase().replaceAll(
-          RegExp(r'[^A-Z0-9]'),
+          _nonAlphanumericRegex,
           '',
         );
     final truncated =
@@ -56,6 +64,8 @@ class BharatPanInputFormatter extends TextInputFormatter {
 /// [TextInputFormatter] for UPI IDs.
 /// Restricts to valid UPI character set and converts to lowercase.
 class BharatUpiInputFormatter extends TextInputFormatter {
+  const BharatUpiInputFormatter();
+
   @override
   TextEditingValue formatEditUpdate(
     TextEditingValue oldValue,
@@ -64,7 +74,7 @@ class BharatUpiInputFormatter extends TextInputFormatter {
     if (newValue.text.isEmpty) return newValue;
 
     final cleaned = newValue.text.toLowerCase().replaceAll(
-          RegExp(r'[^a-z0-9.\-_@]'),
+          _upiAllowedRegex,
           '',
         );
 
@@ -77,6 +87,8 @@ class BharatUpiInputFormatter extends TextInputFormatter {
 
 /// [TextInputFormatter] for Indian GSTIN (15 characters, uppercase).
 class BharatGstinInputFormatter extends TextInputFormatter {
+  const BharatGstinInputFormatter();
+
   @override
   TextEditingValue formatEditUpdate(
     TextEditingValue oldValue,
@@ -85,7 +97,7 @@ class BharatGstinInputFormatter extends TextInputFormatter {
     if (newValue.text.isEmpty) return newValue;
 
     final uppercase = newValue.text.toUpperCase().replaceAll(
-          RegExp(r'[^A-Z0-9]'),
+          _nonAlphanumericRegex,
           '',
         );
     final truncated =
@@ -100,6 +112,8 @@ class BharatGstinInputFormatter extends TextInputFormatter {
 
 /// [TextInputFormatter] for Indian IFSC codes (11 characters, uppercase).
 class BharatIfscInputFormatter extends TextInputFormatter {
+  const BharatIfscInputFormatter();
+
   @override
   TextEditingValue formatEditUpdate(
     TextEditingValue oldValue,
@@ -108,7 +122,7 @@ class BharatIfscInputFormatter extends TextInputFormatter {
     if (newValue.text.isEmpty) return newValue;
 
     final uppercase = newValue.text.toUpperCase().replaceAll(
-          RegExp(r'[^A-Z0-9]'),
+          _nonAlphanumericRegex,
           '',
         );
     final truncated =
@@ -123,6 +137,8 @@ class BharatIfscInputFormatter extends TextInputFormatter {
 
 /// [TextInputFormatter] for 10-digit Indian Mobile Numbers (e.g. `98765 43210`).
 class BharatPhoneInputFormatter extends TextInputFormatter {
+  const BharatPhoneInputFormatter();
+
   @override
   TextEditingValue formatEditUpdate(
     TextEditingValue oldValue,
@@ -130,7 +146,7 @@ class BharatPhoneInputFormatter extends TextInputFormatter {
   ) {
     if (newValue.text.isEmpty) return newValue;
 
-    final digits = newValue.text.replaceAll(RegExp(r'\D'), '');
+    final digits = newValue.text.replaceAll(_nonDigitsRegex, '');
     final truncated = digits.length > 10 ? digits.substring(0, 10) : digits;
 
     if (truncated.length <= 5) {
@@ -152,6 +168,8 @@ class BharatPhoneInputFormatter extends TextInputFormatter {
 /// [TextInputFormatter] for 16-digit UIDAI Virtual IDs (VID).
 /// Formats into 4-digit groups: `XXXX XXXX XXXX XXXX`.
 class BharatVidInputFormatter extends TextInputFormatter {
+  const BharatVidInputFormatter();
+
   @override
   TextEditingValue formatEditUpdate(
     TextEditingValue oldValue,
@@ -159,7 +177,7 @@ class BharatVidInputFormatter extends TextInputFormatter {
   ) {
     if (newValue.text.isEmpty) return newValue;
 
-    final digits = newValue.text.replaceAll(RegExp(r'\D'), '');
+    final digits = newValue.text.replaceAll(_nonDigitsRegex, '');
     final truncated = digits.length > 16 ? digits.substring(0, 16) : digits;
 
     final buffer = StringBuffer();
@@ -183,7 +201,7 @@ class BharatVidInputFormatter extends TextInputFormatter {
 class BharatCardInputFormatter extends TextInputFormatter {
   final int maxDigits;
 
-  BharatCardInputFormatter({this.maxDigits = 19});
+  const BharatCardInputFormatter({this.maxDigits = 19});
 
   @override
   TextEditingValue formatEditUpdate(
@@ -192,7 +210,7 @@ class BharatCardInputFormatter extends TextInputFormatter {
   ) {
     if (newValue.text.isEmpty) return newValue;
 
-    final digits = newValue.text.replaceAll(RegExp(r'\D'), '');
+    final digits = newValue.text.replaceAll(_nonDigitsRegex, '');
     final truncated =
         digits.length > maxDigits ? digits.substring(0, maxDigits) : digits;
 
@@ -214,6 +232,8 @@ class BharatCardInputFormatter extends TextInputFormatter {
 
 /// [TextInputFormatter] for Indian bank account numbers (digits only, max 18).
 class BharatBankAccountInputFormatter extends TextInputFormatter {
+  const BharatBankAccountInputFormatter();
+
   @override
   TextEditingValue formatEditUpdate(
     TextEditingValue oldValue,
@@ -221,7 +241,7 @@ class BharatBankAccountInputFormatter extends TextInputFormatter {
   ) {
     if (newValue.text.isEmpty) return newValue;
 
-    final digits = newValue.text.replaceAll(RegExp(r'\D'), '');
+    final digits = newValue.text.replaceAll(_nonDigitsRegex, '');
     final truncated = digits.length > 18 ? digits.substring(0, 18) : digits;
 
     return TextEditingValue(
@@ -235,7 +255,7 @@ class BharatBankAccountInputFormatter extends TextInputFormatter {
 class BharatCvvInputFormatter extends TextInputFormatter {
   final int maxDigits;
 
-  BharatCvvInputFormatter({this.maxDigits = 4});
+  const BharatCvvInputFormatter({this.maxDigits = 4});
 
   @override
   TextEditingValue formatEditUpdate(
@@ -244,7 +264,7 @@ class BharatCvvInputFormatter extends TextInputFormatter {
   ) {
     if (newValue.text.isEmpty) return newValue;
 
-    final digits = newValue.text.replaceAll(RegExp(r'\D'), '');
+    final digits = newValue.text.replaceAll(_nonDigitsRegex, '');
     final truncated =
         digits.length > maxDigits ? digits.substring(0, maxDigits) : digits;
 
@@ -258,6 +278,8 @@ class BharatCvvInputFormatter extends TextInputFormatter {
 /// [TextInputFormatter] for MoRTH Indian Driving License.
 /// Automatically hyphens into `SS-RR-YYYY-NNNNNNN`.
 class BharatDrivingLicenseInputFormatter extends TextInputFormatter {
+  const BharatDrivingLicenseInputFormatter();
+
   @override
   TextEditingValue formatEditUpdate(
     TextEditingValue oldValue,
@@ -266,7 +288,7 @@ class BharatDrivingLicenseInputFormatter extends TextInputFormatter {
     if (newValue.text.isEmpty) return newValue;
 
     final clean =
-        newValue.text.toUpperCase().replaceAll(RegExp(r'[^A-Z0-9]'), '');
+        newValue.text.toUpperCase().replaceAll(_nonAlphanumericRegex, '');
     final truncated = clean.length > 15 ? clean.substring(0, 15) : clean;
 
     final buffer = StringBuffer();
@@ -287,6 +309,8 @@ class BharatDrivingLicenseInputFormatter extends TextInputFormatter {
 
 /// [TextInputFormatter] for Indian Voter ID / EPIC (max 10 alphanumeric, uppercase).
 class BharatVoterIdInputFormatter extends TextInputFormatter {
+  const BharatVoterIdInputFormatter();
+
   @override
   TextEditingValue formatEditUpdate(
     TextEditingValue oldValue,
@@ -295,7 +319,7 @@ class BharatVoterIdInputFormatter extends TextInputFormatter {
     if (newValue.text.isEmpty) return newValue;
 
     final clean =
-        newValue.text.toUpperCase().replaceAll(RegExp(r'[^A-Z0-9]'), '');
+        newValue.text.toUpperCase().replaceAll(_nonAlphanumericRegex, '');
     final truncated = clean.length > 10 ? clean.substring(0, 10) : clean;
 
     return TextEditingValue(
@@ -307,6 +331,8 @@ class BharatVoterIdInputFormatter extends TextInputFormatter {
 
 /// [TextInputFormatter] for Indian Passport (max 8 alphanumeric, uppercase).
 class BharatPassportInputFormatter extends TextInputFormatter {
+  const BharatPassportInputFormatter();
+
   @override
   TextEditingValue formatEditUpdate(
     TextEditingValue oldValue,
@@ -315,7 +341,7 @@ class BharatPassportInputFormatter extends TextInputFormatter {
     if (newValue.text.isEmpty) return newValue;
 
     final clean =
-        newValue.text.toUpperCase().replaceAll(RegExp(r'[^A-Z0-9]'), '');
+        newValue.text.toUpperCase().replaceAll(_nonAlphanumericRegex, '');
     final truncated = clean.length > 8 ? clean.substring(0, 8) : clean;
 
     return TextEditingValue(
@@ -327,6 +353,8 @@ class BharatPassportInputFormatter extends TextInputFormatter {
 
 /// [TextInputFormatter] for Corporate Identification Number (max 21 alphanumeric, uppercase).
 class BharatCinInputFormatter extends TextInputFormatter {
+  const BharatCinInputFormatter();
+
   @override
   TextEditingValue formatEditUpdate(
     TextEditingValue oldValue,
@@ -335,7 +363,7 @@ class BharatCinInputFormatter extends TextInputFormatter {
     if (newValue.text.isEmpty) return newValue;
 
     final clean =
-        newValue.text.toUpperCase().replaceAll(RegExp(r'[^A-Z0-9]'), '');
+        newValue.text.toUpperCase().replaceAll(_nonAlphanumericRegex, '');
     final truncated = clean.length > 21 ? clean.substring(0, 21) : clean;
 
     return TextEditingValue(
@@ -347,6 +375,8 @@ class BharatCinInputFormatter extends TextInputFormatter {
 
 /// [TextInputFormatter] for Tax Deduction Account Number (max 10 alphanumeric, uppercase).
 class BharatTanInputFormatter extends TextInputFormatter {
+  const BharatTanInputFormatter();
+
   @override
   TextEditingValue formatEditUpdate(
     TextEditingValue oldValue,
@@ -355,7 +385,7 @@ class BharatTanInputFormatter extends TextInputFormatter {
     if (newValue.text.isEmpty) return newValue;
 
     final clean =
-        newValue.text.toUpperCase().replaceAll(RegExp(r'[^A-Z0-9]'), '');
+        newValue.text.toUpperCase().replaceAll(_nonAlphanumericRegex, '');
     final truncated = clean.length > 10 ? clean.substring(0, 10) : clean;
 
     return TextEditingValue(
@@ -367,6 +397,8 @@ class BharatTanInputFormatter extends TextInputFormatter {
 
 /// [TextInputFormatter] for Director Identification Number (max 8 digits).
 class BharatDinInputFormatter extends TextInputFormatter {
+  const BharatDinInputFormatter();
+
   @override
   TextEditingValue formatEditUpdate(
     TextEditingValue oldValue,
@@ -374,7 +406,7 @@ class BharatDinInputFormatter extends TextInputFormatter {
   ) {
     if (newValue.text.isEmpty) return newValue;
 
-    final clean = newValue.text.replaceAll(RegExp(r'\D'), '');
+    final clean = newValue.text.replaceAll(_nonDigitsRegex, '');
     final truncated = clean.length > 8 ? clean.substring(0, 8) : clean;
 
     return TextEditingValue(

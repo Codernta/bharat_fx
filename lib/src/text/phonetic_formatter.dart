@@ -8,7 +8,7 @@ class BharatPhoneticInputFormatter extends TextInputFormatter {
   final IndianScript targetScript;
   final bool convertOnSpace;
 
-  BharatPhoneticInputFormatter({
+  const BharatPhoneticInputFormatter({
     this.targetScript = IndianScript.devanagari,
     this.convertOnSpace = true,
   });

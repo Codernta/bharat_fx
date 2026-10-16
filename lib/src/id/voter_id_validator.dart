@@ -28,6 +28,7 @@ class VoterIdValidationResult {
 /// 3 alphabetical letters (assembly / constituency prefix) followed by 7 numeric digits (e.g. `ABC1234567`).
 class BharatVoterId {
   static final RegExp _standardRegex = RegExp(r'^([A-Z]{3})([0-9]{7})$');
+  static final RegExp _cleanAlphanumericRegex = RegExp(r'[^A-Z0-9]');
 
   /// Validates an Indian Voter ID (EPIC) card.
   ///
@@ -49,7 +50,7 @@ class BharatVoterId {
     }
 
     final raw = voterId.trim().toUpperCase();
-    final clean = raw.replaceAll(RegExp(r'[^A-Z0-9]'), '');
+    final clean = raw.replaceAll(_cleanAlphanumericRegex, '');
 
     if (clean.length != 10) {
       return VoterIdValidationResult(

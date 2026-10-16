@@ -39,6 +39,8 @@ class UpiIntentValidationResult {
 /// NPCI Unified Payments Interface (UPI) Deep Link / Dynamic QR Intent parser,
 /// tamper-detection guard, and secure URI generator.
 class BharatUpiIntent {
+  static final RegExp _fourDigitsRegex = RegExp(r'^\d{4}$');
+
   /// Standard NPCI transaction amount limits (INR).
   static const double standardTransactionLimit = 100000.0; // ₹1 Lakh
   static const double capitalMarketsLimit = 200000.0; // ₹2 Lakh
@@ -209,7 +211,7 @@ class BharatUpiIntent {
 
     // Merchant Category Code (mc)
     final mc = params['mc'];
-    if (mc != null && (mc.length != 4 || !RegExp(r'^\d{4}$').hasMatch(mc))) {
+    if (mc != null && (mc.length != 4 || !_fourDigitsRegex.hasMatch(mc))) {
       warnings
           .add('Merchant category code (mc) should be a 4-digit numeric code');
     }

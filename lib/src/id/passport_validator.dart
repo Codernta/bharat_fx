@@ -32,6 +32,7 @@ class BharatPassport {
 
   // Fallback allowing zero leading digit in legacy booklets
   static final RegExp _relaxedRegex = RegExp(r'^([A-Z])([0-9]{7})$');
+  static final RegExp _cleanAlphanumericRegex = RegExp(r'[^A-Z0-9]');
 
   /// Validates an Indian passport number.
   ///
@@ -53,7 +54,7 @@ class BharatPassport {
     }
 
     final raw = passportNumber.trim().toUpperCase();
-    final clean = raw.replaceAll(RegExp(r'[^A-Z0-9]'), '');
+    final clean = raw.replaceAll(_cleanAlphanumericRegex, '');
 
     if (clean.length != 8) {
       return PassportValidationResult(

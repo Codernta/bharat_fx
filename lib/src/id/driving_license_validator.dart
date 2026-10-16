@@ -47,6 +47,7 @@ class BharatDrivingLicense {
   static final RegExp _legacyRegex = RegExp(
     r'^([A-Z]{2})[-/\s]?([0-9]{1,3})[-/\s]?([0-9]{4})[-/\s]?([0-9]{5,8})$',
   );
+  static final RegExp _cleanAlphanumericRegex = RegExp(r'[^A-Z0-9]');
 
   /// Validates and parses an Indian Driving License number.
   ///
@@ -69,7 +70,7 @@ class BharatDrivingLicense {
     }
 
     final raw = dlNumber.trim().toUpperCase();
-    final clean = raw.replaceAll(RegExp(r'[^A-Z0-9]'), '');
+    final clean = raw.replaceAll(_cleanAlphanumericRegex, '');
 
     if (clean.length < 14 || clean.length > 17) {
       return DrivingLicenseValidationResult(

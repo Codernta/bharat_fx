@@ -4,15 +4,16 @@ import 'package:flutter/services.dart';
 /// with optional spacing (e.g. "110 001").
 class BharatPinCodeInputFormatter extends TextInputFormatter {
   final bool withSpace;
+  static final RegExp _nonDigitsRegex = RegExp(r'\D');
 
-  BharatPinCodeInputFormatter({this.withSpace = false});
+  const BharatPinCodeInputFormatter({this.withSpace = false});
 
   @override
   TextEditingValue formatEditUpdate(
     TextEditingValue oldValue,
     TextEditingValue newValue,
   ) {
-    final digits = newValue.text.replaceAll(RegExp(r'\D'), '');
+    final digits = newValue.text.replaceAll(_nonDigitsRegex, '');
 
     // Max 6 digits for Indian PIN codes
     final truncated = digits.length > 6 ? digits.substring(0, 6) : digits;

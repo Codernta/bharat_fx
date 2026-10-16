@@ -11,6 +11,9 @@ class BharatCurrency {
   /// Default Indian Rupee symbol.
   static const String rupeeSymbol = '₹';
 
+  static final RegExp _trailingZerosRegex = RegExp(r'0+$');
+  static final RegExp _trailingDotRegex = RegExp(r'\.$');
+
   /// Formats a [num] into the Indian numbering system.
   ///
   /// Examples:
@@ -116,8 +119,8 @@ class BharatCurrency {
       // Remove trailing zeroes like 1.50 -> 1.5, 1.00 -> 1
       if (formattedNumber.contains('.')) {
         formattedNumber = formattedNumber
-            .replaceAll(RegExp(r'0+$'), '')
-            .replaceAll(RegExp(r'\.$'), '');
+            .replaceAll(_trailingZerosRegex, '')
+            .replaceAll(_trailingDotRegex, '');
       }
     }
 
@@ -236,7 +239,9 @@ class BharatCurrencyInputFormatter extends TextInputFormatter {
   final int maxDigits;
   final bool allowDecimals;
 
-  BharatCurrencyInputFormatter({
+  static final RegExp _nonDigitsRegex = RegExp(r'\D');
+
+  const BharatCurrencyInputFormatter({
     this.includeSymbol = false,
     this.symbol = '₹',
     this.maxDigits = 15,
@@ -264,16 +269,16 @@ class BharatCurrencyInputFormatter extends TextInputFormatter {
 
     if (hasDecimal) {
       final parts = text.split('.');
-      wholeDigits = parts[0].replaceAll(RegExp(r'\D'), '');
+      wholeDigits = parts[0].replaceAll(_nonDigitsRegex, '');
       decimalDigits = parts.length > 1
-          ? parts.sublist(1).join().replaceAll(RegExp(r'\D'), '')
+          ? parts.sublist(1).join().replaceAll(_nonDigitsRegex, '')
           : '';
       // Limit decimals to 2 places
       if (decimalDigits.length > 2) {
         decimalDigits = decimalDigits.substring(0, 2);
       }
     } else {
-      wholeDigits = text.replaceAll(RegExp(r'\D'), '');
+      wholeDigits = text.replaceAll(_nonDigitsRegex, '');
     }
 
     if (wholeDigits.length > maxDigits) {

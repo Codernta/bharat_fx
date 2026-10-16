@@ -30,6 +30,10 @@ class BharatAadhaar {
   // Verhoeff inverse table (inv)
   static const List<int> _inv = [0, 4, 3, 2, 1, 5, 6, 7, 8, 9];
 
+  static final RegExp _whitespaceRegex = RegExp(r'\s+');
+  static final RegExp _aadhaarFormatRegex = RegExp(r'^[2-9][0-9]{11}$');
+  static final RegExp _nonDigitsRegex = RegExp(r'\D');
+
   /// Validates whether the given string is a valid 12-digit Indian Aadhaar number
   /// using the UIDAI Verhoeff algorithm.
   ///
@@ -39,10 +43,10 @@ class BharatAadhaar {
   /// 3. Passes the Verhoeff checksum.
   static bool validate(String? aadhaar) {
     if (aadhaar == null) return false;
-    final digits = aadhaar.replaceAll(RegExp(r'\s+'), '');
+    final digits = aadhaar.replaceAll(_whitespaceRegex, '');
 
     if (digits.length != 12) return false;
-    if (!RegExp(r'^[2-9][0-9]{11}$').hasMatch(digits)) return false;
+    if (!_aadhaarFormatRegex.hasMatch(digits)) return false;
 
     return validateVerhoeff(digits);
   }
@@ -50,24 +54,26 @@ class BharatAadhaar {
   /// Verifies a number string against the Verhoeff checksum algorithm.
   static bool validateVerhoeff(String number) {
     int c = 0;
-    final reversed = number.split('').reversed.map(int.parse).toList();
-
-    for (int i = 0; i < reversed.length; i++) {
-      c = _d[c][_p[i % 8][reversed[i]]];
+    int pos = 0;
+    for (int i = number.length - 1; i >= 0; i--) {
+      final digit = number.codeUnitAt(i) - 48;
+      if (digit < 0 || digit > 9) return false;
+      c = _d[c][_p[pos % 8][digit]];
+      pos++;
     }
-
     return c == 0;
   }
 
   /// Calculates the Verhoeff check digit for any numerical string.
   static int generateVerhoeffCheckDigit(String number) {
     int c = 0;
-    final reversed = number.split('').reversed.map(int.parse).toList();
-
-    for (int i = 0; i < reversed.length; i++) {
-      c = _d[c][_p[(i + 1) % 8][reversed[i]]];
+    int pos = 0;
+    for (int i = number.length - 1; i >= 0; i--) {
+      final digit = number.codeUnitAt(i) - 48;
+      if (digit < 0 || digit > 9) return 0;
+      c = _d[c][_p[(pos + 1) % 8][digit]];
+      pos++;
     }
-
     return _inv[c];
   }
 
@@ -83,7 +89,7 @@ class BharatAadhaar {
     String maskChar = 'X',
     bool preserveSpacing = true,
   }) {
-    final digits = aadhaar.replaceAll(RegExp(r'\s+'), '');
+    final digits = aadhaar.replaceAll(_whitespaceRegex, '');
     if (digits.length != 12) return aadhaar;
 
     final maskedHead = maskChar * 8;
@@ -97,7 +103,7 @@ class BharatAadhaar {
 
   /// Formats an Aadhaar number into standard 4-digit blocks (`XXXX XXXX XXXX`).
   static String format(String aadhaar) {
-    final digits = aadhaar.replaceAll(RegExp(r'\D'), '');
+    final digits = aadhaar.replaceAll(_nonDigitsRegex, '');
     if (digits.length != 12) return aadhaar;
     return '${digits.substring(0, 4)} ${digits.substring(4, 8)} ${digits.substring(8, 12)}';
   }

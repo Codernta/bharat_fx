@@ -61,7 +61,9 @@ class BharatCurrencyText extends StatelessWidget {
             decimalDigits: decimalDigits,
           );
 
-    final words = BharatCurrency.toWords(amount, language: wordsLanguage);
+    final String? words = (showWordsTooltip || showWordsSubtitle)
+        ? BharatCurrency.toWords(amount, language: wordsLanguage)
+        : null;
 
     Widget content = Row(
       mainAxisSize: MainAxisSize.min,
@@ -76,11 +78,11 @@ class BharatCurrencyText extends StatelessWidget {
       ],
     );
 
-    if (showWordsTooltip) {
+    if (showWordsTooltip && words != null) {
       content = Tooltip(message: words, child: content);
     }
 
-    if (showWordsSubtitle) {
+    if (showWordsSubtitle && words != null) {
       return Column(
         mainAxisSize: MainAxisSize.min,
         crossAxisAlignment: crossAxisAlignment,

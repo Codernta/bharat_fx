@@ -1,5 +1,18 @@
 # Changelog
 
+## 1.0.6
+
+* **⚡ Performance & Memory Footprint Optimizations**:
+  * **Zero-Allocation Verhoeff Algorithm (`Aadhaar` & `VID`)**: Rewrote Verhoeff check-digit validation and generation using direct ASCII byte indexing (`codeUnitAt`), eliminating intermediate string splitting, array reversal, and list allocation overhead.
+  * **Zero-Allocation Luhn Algorithm (`BharatCard`)**: Optimized card checksum calculation with in-place ASCII byte arithmetic, removing temporary substring allocations and repeated integer parsing.
+  * **Precompiled Static Regular Expressions**: Migrated inline `RegExp` instantiations across all validators, formatters, and PII redactors (`Aadhaar`, `PAN`, `VID`, `Card`, `PIN Code`, `GSTIN`, `IFSC`, `Vehicle`, `Driving License`, `Voter ID`, `Passport`, `CIN`, `TAN`, `DIN`, `Phone`, `UPI`, `PII Redactor`, `GST Invoice`, `Number to Words`) to precompiled static patterns, eliminating regex recompilation on every keystroke and validation cycle.
+  * **Const Constructors for Formatters**: Added `const` constructors to all 16 `TextInputFormatter` subclasses and converted formatter lists to `const` in `BharatTextField`, significantly reducing heap allocations during widget rebuilds.
+  * **Memoized PIN Code Resolution (`BharatPinCodeFormField`)**: Prevented redundant lookup calls and unnecessary `setState` cycles when cursor position changes or text is tapped without content modification.
+  * **Fast-Path Vernacular & Money Parsing**: Added fast non-allocating checks in vernacular script formatters and replaced regex matching in `BharatMoney.parse` with character inspections.
+* **🛡️ 100% Backward Compatible & Dependency-Free**:
+  * Zero changes to existing public APIs or method signatures.
+  * Maintained 100% pure Dart & Flutter dependency-free guarantee (zero external third-party runtime dependencies).
+
 ## 1.0.5
 
 * **📑 Indian GST Invoice Helpers, HSN/SAC & e-Invoice QR (`BharatHsn`, `BharatSac`, `BharatGstInvoice`, `BharatGstQr`)**:

@@ -335,12 +335,13 @@ class BharatTransliterator {
     return buffer.toString();
   }
 
+  static final RegExp _tokenizeRegex = RegExp(r'([a-zA-Z]+)|([^a-zA-Z]+)');
+
   static List<_Token> _tokenize(String input) {
     final tokens = <_Token>[];
-    final regex = RegExp(r'([a-zA-Z]+)|([^a-zA-Z]+)');
-    for (final match in regex.allMatches(input)) {
+    for (final match in _tokenizeRegex.allMatches(input)) {
       final text = match.group(0)!;
-      final isWord = RegExp(r'^[a-zA-Z]+$').hasMatch(text);
+      final isWord = match.group(1) != null;
       tokens.add(_Token(text: text, isWord: isWord));
     }
     return tokens;

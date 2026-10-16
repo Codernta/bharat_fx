@@ -92,6 +92,7 @@ class BharatCin {
   static final RegExp _cinRegex = RegExp(
     r'^([LU])([0-9]{5})([A-Z]{2})([0-9]{4})([A-Z]{3})([0-9]{6})$',
   );
+  static final RegExp _cleanAlphanumericRegex = RegExp(r'[^A-Z0-9]');
 
   static const Map<String, String> _companyTypes = {
     'PTC': 'Private Limited Company',
@@ -128,7 +129,7 @@ class BharatCin {
     }
 
     final raw = cin.trim().toUpperCase();
-    final clean = raw.replaceAll(RegExp(r'[^A-Z0-9]'), '');
+    final clean = raw.replaceAll(_cleanAlphanumericRegex, '');
 
     if (clean.length != 21) {
       return CinValidationResult(
@@ -219,6 +220,7 @@ class BharatCin {
 class BharatTan {
   static final RegExp _tanRegex =
       RegExp(r'^([A-Z]{3})([A-Z])([0-9]{5})([A-Z])$');
+  static final RegExp _cleanAlphanumericRegex = RegExp(r'[^A-Z0-9]');
 
   /// Validates a 10-character Indian TAN.
   ///
@@ -240,7 +242,7 @@ class BharatTan {
     }
 
     final raw = tan.trim().toUpperCase();
-    final clean = raw.replaceAll(RegExp(r'[^A-Z0-9]'), '');
+    final clean = raw.replaceAll(_cleanAlphanumericRegex, '');
 
     if (clean.length != 10) {
       return TanValidationResult(
@@ -289,6 +291,7 @@ class BharatTan {
 /// Director Identification Number (DIN) validator.
 class BharatDin {
   static final RegExp _dinRegex = RegExp(r'^[0-9]{8}$');
+  static final RegExp _digitsOnlyRegex = RegExp(r'\D');
 
   /// Validates an 8-digit Director Identification Number (DIN).
   static DinValidationResult validate(String? din) {
@@ -300,7 +303,7 @@ class BharatDin {
       );
     }
 
-    final clean = din.trim().replaceAll(RegExp(r'\D'), '');
+    final clean = din.trim().replaceAll(_digitsOnlyRegex, '');
 
     if (clean.length != 8 || !_dinRegex.hasMatch(clean)) {
       return DinValidationResult(

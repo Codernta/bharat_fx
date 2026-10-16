@@ -51,6 +51,7 @@ class BharatPiiRedactor {
   static final RegExp _upiRegex = RegExp(
     r'\b([a-zA-Z0-9.\-_]{2,64})@([a-zA-Z]{2,64})\b',
   );
+  static final RegExp _nonDigitsRegex = RegExp(r'\D');
 
   // Sensitive JSON / Map keys that must always be masked
   static final Set<String> _sensitiveKeys = {
@@ -151,7 +152,7 @@ class BharatPiiRedactor {
     // 5. Redact Payment Cards (Luhn validated or structured card numbers)
     sanitized = sanitized.replaceAllMapped(_cardRegex, (match) {
       final raw = match.group(0)!;
-      final cleanDigits = raw.replaceAll(RegExp(r'\D'), '');
+      final cleanDigits = raw.replaceAll(_nonDigitsRegex, '');
 
       if (cleanDigits.length >= 13 && cleanDigits.length <= 19) {
         if (LuhnAlgorithm.validate(cleanDigits)) {
@@ -239,12 +240,12 @@ class BharatPiiRedactor {
     if (_bankAccountContextRegex.hasMatch(text)) return true;
 
     for (final match in _aadhaarRegex.allMatches(text)) {
-      final digits = match.group(0)!.replaceAll(RegExp(r'\D'), '');
+      final digits = match.group(0)!.replaceAll(_nonDigitsRegex, '');
       if (BharatAadhaar.validate(digits)) return true;
     }
 
     for (final match in _cardRegex.allMatches(text)) {
-      final digits = match.group(0)!.replaceAll(RegExp(r'\D'), '');
+      final digits = match.group(0)!.replaceAll(_nonDigitsRegex, '');
       if (digits.length >= 13 && LuhnAlgorithm.validate(digits)) return true;
     }
 

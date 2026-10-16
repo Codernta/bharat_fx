@@ -80,7 +80,7 @@ class BharatMoney implements Comparable<BharatMoney> {
 
     final trimmed = input.trim();
     // Reject scientific notation
-    if (RegExp(r'[eE]').hasMatch(trimmed)) return null;
+    if (trimmed.contains('e') || trimmed.contains('E')) return null;
 
     final parsedVal = BharatCurrency.parse(trimmed);
     if (parsedVal == null || parsedVal.isNaN || parsedVal.isInfinite) {

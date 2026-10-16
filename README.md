@@ -60,7 +60,7 @@ Add `bharat_fx` to your `pubspec.yaml`:
 
 ```yaml
 dependencies:
-  bharat_fx: ^1.0.4
+  bharat_fx: ^1.0.6
 ```
 
 Import the package:

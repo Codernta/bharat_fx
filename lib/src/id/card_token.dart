@@ -5,6 +5,8 @@ import 'card_validator.dart';
 /// Under RBI guidelines, merchants, payment aggregators, and fintechs are prohibited
 /// from storing real credit or debit card PANs. Instead, network-issued tokens are retained.
 class BharatCardToken {
+  static final RegExp _fourDigitsRegex = RegExp(r'^\d{4}$');
+
   /// The network-issued token string (substituting the real 16-digit PAN).
   final String token;
 
@@ -40,7 +42,7 @@ class BharatCardToken {
   bool get isValid {
     if (token.trim().isEmpty) return false;
     if (tokenReferenceNumber.trim().isEmpty) return false;
-    if (lastFour.length != 4 || !RegExp(r'^\d{4}$').hasMatch(lastFour)) {
+    if (lastFour.length != 4 || !_fourDigitsRegex.hasMatch(lastFour)) {
       return false;
     }
     return BharatCard.validateExpiry(expiryMonth, expiryYear);

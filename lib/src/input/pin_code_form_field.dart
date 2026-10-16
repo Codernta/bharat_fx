@@ -39,8 +39,10 @@ class BharatPinCodeFormField extends StatefulWidget {
 }
 
 class _BharatPinCodeFormFieldState extends State<BharatPinCodeFormField> {
+  static final RegExp _nonDigitsRegex = RegExp(r'\D');
   late TextEditingController _controller;
   PinCodeInfo? _resolvedInfo;
+  String? _lastResolvedDigits;
 
   @override
   void initState() {
@@ -69,8 +71,13 @@ class _BharatPinCodeFormFieldState extends State<BharatPinCodeFormField> {
   }
 
   void _resolvePinCode(String value) {
-    final digits = value.replaceAll(RegExp(r'\D'), '');
+    final digits = value.replaceAll(_nonDigitsRegex, '');
+    if (digits == _lastResolvedDigits) {
+      return;
+    }
+
     if (digits.length == 6) {
+      _lastResolvedDigits = digits;
       final info = BharatPinCode.lookup(digits);
       setState(() {
         _resolvedInfo = info;
@@ -86,6 +93,7 @@ class _BharatPinCodeFormFieldState extends State<BharatPinCodeFormField> {
         widget.onResolved?.call(info);
       }
     } else {
+      _lastResolvedDigits = null;
       if (_resolvedInfo != null) {
         setState(() {
           _resolvedInfo = null;

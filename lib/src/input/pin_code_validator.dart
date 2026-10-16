@@ -3,13 +3,17 @@ import 'pin_code_data.dart';
 /// Validator and local offline resolver for Indian Postal PIN codes.
 class BharatPinCode {
   static final RegExp _pinRegex = RegExp(r'^[1-9][0-9]{5}$');
+  static final RegExp _whitespaceRegex = RegExp(r'\s+');
+  static final RegExp _nonDigitsRegex = RegExp(r'\D');
 
   /// Validates whether the given string is a valid 6-digit Indian PIN code.
   ///
   /// PIN codes must be exactly 6 digits and cannot start with 0.
   static bool isValid(String? pinCode) {
     if (pinCode == null) return false;
-    final cleaned = pinCode.replaceAll(RegExp(r'\s+'), '');
+    final cleaned = pinCode.contains(' ')
+        ? pinCode.replaceAll(_whitespaceRegex, '')
+        : pinCode;
     return _pinRegex.hasMatch(cleaned);
   }
 
@@ -27,8 +31,10 @@ class BharatPinCode {
       return const PinCodeInfo(pinCode: '', isValid: false);
     }
 
-    final cleaned = pinCode.replaceAll(RegExp(r'\s+'), '');
-    if (!isValid(cleaned)) {
+    final cleaned = pinCode.contains(' ')
+        ? pinCode.replaceAll(_whitespaceRegex, '')
+        : pinCode;
+    if (!_pinRegex.hasMatch(cleaned)) {
       return PinCodeInfo(pinCode: cleaned, isValid: false);
     }
 
@@ -67,7 +73,7 @@ class BharatPinCode {
 
   /// Formats a 6-digit PIN code with an optional space grouping (e.g., `110 001`).
   static String format(String pinCode, {bool withSpace = true}) {
-    final digits = pinCode.replaceAll(RegExp(r'\D'), '');
+    final digits = pinCode.replaceAll(_nonDigitsRegex, '');
     if (digits.length != 6) return pinCode;
     if (withSpace) {
       return '${digits.substring(0, 3)} ${digits.substring(3, 6)}';

@@ -24,6 +24,9 @@ class BankAccountValidationResult {
 
 /// Validator, masker, and confirmation matcher for Indian bank accounts (RBI guidelines).
 class BharatBankAccount {
+  static final RegExp _whitespaceRegex = RegExp(r'\s+');
+  static final RegExp _digitsOnlyRegex = RegExp(r'^\d+$');
+
   /// Known standard account number lengths by 4-letter bank code.
   static const Map<String, List<int>> _bankLengths = {
     'SBIN': [11, 17], // State Bank of India
@@ -61,9 +64,9 @@ class BharatBankAccount {
       );
     }
 
-    final digits = accountNumber.trim().replaceAll(RegExp(r'\s+'), '');
+    final digits = accountNumber.trim().replaceAll(_whitespaceRegex, '');
 
-    if (!RegExp(r'^\d+$').hasMatch(digits)) {
+    if (!_digitsOnlyRegex.hasMatch(digits)) {
       return BankAccountValidationResult(
         accountNumber: digits,
         isValid: false,
@@ -119,7 +122,7 @@ class BharatBankAccount {
     String maskChar = 'X',
     int visibleDigits = 4,
   }) {
-    final digits = accountNumber.replaceAll(RegExp(r'\s+'), '');
+    final digits = accountNumber.replaceAll(_whitespaceRegex, '');
     if (digits.length <= visibleDigits) return accountNumber;
 
     final maskedLength = digits.length - visibleDigits;
@@ -131,8 +134,8 @@ class BharatBankAccount {
   /// executing comparison in constant time to prevent timing leaks.
   static bool match(String? account, String? confirmAccount) {
     if (account == null || confirmAccount == null) return false;
-    final a = account.trim().replaceAll(RegExp(r'\s+'), '');
-    final b = confirmAccount.trim().replaceAll(RegExp(r'\s+'), '');
+    final a = account.trim().replaceAll(_whitespaceRegex, '');
+    final b = confirmAccount.trim().replaceAll(_whitespaceRegex, '');
     return TimingSafe.equals(a, b);
   }
 }

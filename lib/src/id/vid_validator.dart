@@ -3,6 +3,10 @@ import 'aadhaar_validator.dart';
 /// Validator and masker for 16-digit Indian Virtual IDs (VID),
 /// mandated by UIDAI to protect user privacy as an alternative to Aadhaar.
 class BharatVid {
+  static final RegExp _whitespaceRegex = RegExp(r'\s+');
+  static final RegExp _vidFormatRegex = RegExp(r'^[2-9][0-9]{15}$');
+  static final RegExp _nonDigitsRegex = RegExp(r'\D');
+
   /// Validates whether the given string is a valid 16-digit UIDAI Virtual ID (VID).
   ///
   /// Rules:
@@ -11,10 +15,10 @@ class BharatVid {
   /// 3. Validated via the official Verhoeff checksum algorithm.
   static bool validate(String? vid) {
     if (vid == null) return false;
-    final digits = vid.replaceAll(RegExp(r'\s+'), '');
+    final digits = vid.replaceAll(_whitespaceRegex, '');
 
     if (digits.length != 16) return false;
-    if (!RegExp(r'^[2-9][0-9]{15}$').hasMatch(digits)) return false;
+    if (!_vidFormatRegex.hasMatch(digits)) return false;
 
     return BharatAadhaar.validateVerhoeff(digits);
   }
@@ -30,7 +34,7 @@ class BharatVid {
     String maskChar = 'X',
     bool preserveSpacing = true,
   }) {
-    final digits = vid.replaceAll(RegExp(r'\s+'), '');
+    final digits = vid.replaceAll(_whitespaceRegex, '');
     if (digits.length != 16) return vid;
 
     final maskedHead = maskChar * 12;
@@ -44,7 +48,7 @@ class BharatVid {
 
   /// Formats a 16-digit VID into standard 4-digit blocks (`XXXX XXXX XXXX XXXX`).
   static String format(String vid) {
-    final digits = vid.replaceAll(RegExp(r'\D'), '');
+    final digits = vid.replaceAll(_nonDigitsRegex, '');
     if (digits.length != 16) return vid;
     return '${digits.substring(0, 4)} ${digits.substring(4, 8)} ${digits.substring(8, 12)} ${digits.substring(12, 16)}';
   }

@@ -42,6 +42,7 @@ class BharatVehicle {
   static final RegExp _diplomaticRegex = RegExp(
     r'^([0-9]{1,3})\s*(CD|CC|UN)\s*([0-9]{1,4})$',
   );
+  static final RegExp _whitespaceRegex = RegExp(r'\s+');
 
   /// Checks if [plateNumber] matches any recognized Indian registration format.
   static bool isValid(String? plateNumber) {
@@ -75,7 +76,7 @@ class BharatVehicle {
     final normalized = raw
         .toUpperCase()
         .replaceAll('-', ' ')
-        .replaceAll(RegExp(r'\s+'), ' ')
+        .replaceAll(_whitespaceRegex, ' ')
         .trim();
 
     final unspaced = normalized.replaceAll(' ', '');

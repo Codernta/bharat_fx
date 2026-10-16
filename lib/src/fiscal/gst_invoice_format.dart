@@ -66,6 +66,8 @@ enum GstDocumentType {
 class BharatGstInvoice {
   /// Strictly allowed characters: Alphanumerics, hyphen (`-`), and slash (`/`).
   static final RegExp _allowedCharsRegex = RegExp(r'^[A-Za-z0-9/-]+$');
+  static final RegExp _disallowedCharsRegex = RegExp(r'[^A-Za-z0-9/-]+');
+  static final RegExp _multipleHyphensRegex = RegExp(r'-+');
 
   /// Validates an Indian GST tax invoice serial number against statutory CGST Rule 46(b).
   ///
@@ -139,14 +141,16 @@ class BharatGstInvoice {
     if (input.isEmpty) return '';
 
     // Replace any run of characters not allowed under Rule 46(b) with the separator
-    var result = input
-        .trim()
-        .replaceAll(RegExp(r'[^A-Za-z0-9/-]+'), replacementSeparator);
+    var result = input.trim().replaceAll(_disallowedCharsRegex, replacementSeparator);
 
     // Collapse multiple consecutive separators
     if (replacementSeparator.isNotEmpty) {
-      final escaped = RegExp.escape(replacementSeparator);
-      result = result.replaceAll(RegExp('$escaped+'), replacementSeparator);
+      if (replacementSeparator == '-') {
+        result = result.replaceAll(_multipleHyphensRegex, '-');
+      } else {
+        final escaped = RegExp.escape(replacementSeparator);
+        result = result.replaceAll(RegExp('$escaped+'), replacementSeparator);
+      }
       // Strip leading and trailing separator
       if (result.startsWith(replacementSeparator)) {
         result = result.substring(replacementSeparator.length);

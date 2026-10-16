@@ -23,6 +23,7 @@ class PhoneValidationResult {
 /// Indian mobile phone number validator and formatter.
 class BharatPhone {
   static final RegExp _mobileRegex = RegExp(r'^[6-9][0-9]{9}$');
+  static final RegExp _nonDigitsRegex = RegExp(r'\D');
 
   /// Validates whether the given string is a valid 10-digit Indian mobile number
   /// (starting with 6, 7, 8, or 9), allowing for optional +91 or leading 0 prefix.
@@ -36,7 +37,7 @@ class BharatPhone {
     }
 
     final raw = phone.trim();
-    var digits = raw.replaceAll(RegExp(r'\D'), '');
+    var digits = raw.replaceAll(_nonDigitsRegex, '');
 
     // Strip country code (+91) or leading 0
     if (digits.startsWith('91') && digits.length == 12) {
@@ -74,7 +75,7 @@ class BharatPhone {
 
   /// Formats a 10-digit phone number into `+91 XXXXX XXXXX` or `XXXXX XXXXX`.
   static String format(String phone, {bool includeCountryCode = true}) {
-    var digits = phone.replaceAll(RegExp(r'\D'), '');
+    var digits = phone.replaceAll(_nonDigitsRegex, '');
     if (digits.startsWith('91') && digits.length == 12) {
       digits = digits.substring(2);
     } else if (digits.startsWith('0') && digits.length == 11) {
