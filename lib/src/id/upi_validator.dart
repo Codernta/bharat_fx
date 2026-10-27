@@ -73,6 +73,14 @@ class BharatUpi {
     'slice': ('Slice', 'Slice / North East SFB'),
     'jupiteraxis': ('Jupiter', 'Axis Bank'),
     'federal': ('Fi Money / Federal Bank', 'Federal Bank'),
+    'fam': ('FamPay', 'IDFC FIRST Bank'),
+    'navi': ('Navi', 'Axis Bank'),
+    'payzapp': ('PayZapp', 'HDFC Bank'),
+    'freecharge': ('Freecharge', 'Axis Bank'),
+    'airtel': ('Airtel Payments Bank', 'Airtel Payments Bank'),
+    'postbank': ('India Post Payments Bank', 'IPPB'),
+    'jio': ('Jio Payments Bank', 'Jio Payments Bank'),
+    'fbl': ('Federal Bank', 'Federal Bank'),
 
     // Major Commercial Banks
     'hdfcbank': ('HDFC Mobile', 'HDFC Bank'),

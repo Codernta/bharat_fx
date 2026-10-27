@@ -112,7 +112,7 @@ class BharatHash {
     final byteData = ByteData.sublistView(padded);
     byteData.setUint64(totalLength - 8, bitLength, Endian.big);
 
-    final w = List<int>.filled(64, 0);
+    final w = Uint32List(64);
 
     for (int chunk = 0; chunk < totalLength; chunk += 64) {
       for (int i = 0; i < 16; i++) {
@@ -217,7 +217,16 @@ class BharatHash {
     outer.setRange(0, kOpad.length, kOpad);
     outer.setRange(kOpad.length, outer.length, innerHash);
 
-    return sha256Bytes(outer);
+    final result = sha256Bytes(outer);
+
+    // Cryptographic zeroization: clear intermediate key buffers from memory
+    effectiveKey.fillRange(0, effectiveKey.length, 0);
+    kIpad.fillRange(0, kIpad.length, 0);
+    kOpad.fillRange(0, kOpad.length, 0);
+    inner.fillRange(0, inner.length, 0);
+    outer.fillRange(0, outer.length, 0);
+
+    return result;
   }
 
   /// Serializes a map of parameters into a canonical query string sorted alphabetically by key.

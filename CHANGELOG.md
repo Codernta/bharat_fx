@@ -1,5 +1,29 @@
 # Changelog
 
+## 1.0.7
+
+* **🔒 Security Hardening & Fintech Cryptographic Protection**:
+  * **Timing-Safe Constant-Time Comparison (`TimingSafe`)**:
+    * Zero-allocation constant-time string comparison using direct `codeUnitAt(i)` indexing without temporary `codeUnits` list wrapper allocations.
+    * Normalized loop execution up to `maxLength` across both `TimingSafe.equals` and `TimingSafe.bytesEquals` to eliminate length-leakage timing side channels during token, OTP, and HMAC verification.
+  * **Cryptographic Memory Zeroization (`BharatHash`)**:
+    * Hardened HMAC-SHA256 by explicitly zeroing intermediate sensitive key buffers (`effectiveKey`, `kIpad`, `kOpad`, `inner`, `outer`) upon digest calculation to prevent secret leakage from heap dumps (OWASP MASVS-STORAGE).
+    * Upgraded SHA-256 message schedule buffers to `Uint32List` for optimized low-level Dart VM representation.
+  * **Rate Limiter DoS & Memory Protection (`AntiBruteForceGuard`)**:
+    * Added `maxTrackedKeys` (default 10,000) with automatic expired key sweeps and oldest-entry eviction to prevent memory exhaustion under distributed bot/dictionary attacks.
+    * Added `trackedKeyCount` getter and `clear()` lifecycle method.
+  * **Expanded DPDP Act & Fintech Key Redaction (`BharatPiiRedactor`)**:
+    * Extended sensitive dictionary scrubbing with critical fintech tokens: `jwt`, `bearer`, `token`, `session_id`, `auth_code`, `client_secret`, `biometric`, `encryption_key`, `salt`, `iv`, `vpa`, `irn`.
+  * **UPI Deep-Link & Intent Defense (`BharatUpiIntent`, `BharatUpi`)**:
+    * Expanded malicious URI scheme detection in payment deep links to block `vbscript:`, `blob:`, `about:`, `content:`, and `intent:` protocol injection.
+    * Added official support for 12+ popular Indian UPI PSP handles: `fam` (FamPay), `navi` (Navi), `airtel` (Airtel Payments Bank), `payzapp` (HDFC PayZapp), `freecharge` (Axis), `postbank` (IPPB), `jio` (Jio Payments Bank), `fbl` (Federal Bank).
+  * **Bank Account Number Fraud Protection (`BharatBankAccount`)**:
+    * Added automatic rejection of accounts with repetitive dummy digits (`0000000000`, `1111111111`, etc.) rejected by NPCI NACH and core banking switches.
+    * Sanitized non-numeric formatting characters before masking.
+* **🛡️ 100% Backward Compatible & Dependency-Free**:
+  * Fully backward compatible with existing 1.0.x APIs.
+  * Zero third-party runtime dependencies.
+
 ## 1.0.6
 
 * **⚡ Performance & Memory Footprint Optimizations**:

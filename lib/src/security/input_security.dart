@@ -60,12 +60,20 @@ class FintechInputSecurityConfig {
 class AntiBruteForceGuard {
   final int maxAttempts;
   final Duration window;
+  final int maxTrackedKeys;
   final Map<String, List<DateTime>> _attempts = {};
 
   AntiBruteForceGuard({
     this.maxAttempts = 5,
     this.window = const Duration(minutes: 5),
+    this.maxTrackedKeys = 10000,
   });
+
+  /// Current number of tracked identifiers in memory.
+  int get trackedKeyCount => _attempts.length;
+
+  /// Completely clears all tracked rate limit state.
+  void clear() => _attempts.clear();
 
   /// Records an attempt for [identifier] (e.g. user ID, session ID, or operation key).
   ///
@@ -73,6 +81,11 @@ class AntiBruteForceGuard {
   bool recordAttempt(String identifier) {
     final now = DateTime.now();
     _cleanExpired(identifier, now);
+
+    if (!_attempts.containsKey(identifier) &&
+        _attempts.length >= maxTrackedKeys) {
+      _pruneOldestEntries(now);
+    }
 
     final list = _attempts.putIfAbsent(identifier, () => []);
     if (list.length >= maxAttempts) {
@@ -121,6 +134,24 @@ class AntiBruteForceGuard {
 
     if (list.isEmpty) {
       _attempts.remove(identifier);
+    }
+  }
+
+  void _pruneOldestEntries(DateTime now) {
+    // 1. Sweep all expired keys first
+    final cutoff = now.subtract(window);
+    _attempts.removeWhere((_, timestamps) {
+      timestamps.removeWhere((ts) => ts.isBefore(cutoff));
+      return timestamps.isEmpty;
+    });
+
+    // 2. If still at/over capacity, evict the oldest 10% of entries to prevent DoS
+    if (_attempts.length >= maxTrackedKeys) {
+      final keysToRemove =
+          _attempts.keys.take((maxTrackedKeys * 0.1).ceil()).toList();
+      for (final k in keysToRemove) {
+        _attempts.remove(k);
+      }
     }
   }
 }

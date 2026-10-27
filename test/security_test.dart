@@ -232,5 +232,91 @@ void main() {
       guard.reset('user_1');
       expect(guard.isBlocked('user_1'), isFalse);
     });
+
+    test('enforces maxTrackedKeys and prevents memory exhaustion', () {
+      final guard = AntiBruteForceGuard(
+        maxAttempts: 2,
+        window: const Duration(minutes: 5),
+        maxTrackedKeys: 5,
+      );
+
+      for (int i = 0; i < 5; i++) {
+        expect(guard.recordAttempt('key_$i'), isTrue);
+      }
+      expect(guard.trackedKeyCount, 5);
+
+      // Adding 6th key triggers pruning/eviction
+      expect(guard.recordAttempt('key_new'), isTrue);
+      expect(guard.trackedKeyCount <= 5, isTrue);
+
+      guard.clear();
+      expect(guard.trackedKeyCount, 0);
+    });
+  });
+
+  group('Fintech & Banking Security Enhancements (1.0.7)', () {
+    test('redacts additional sensitive keys (JWT, session_id, vpa)', () {
+      final data = {
+        'jwt': 'header.payload.signature',
+        'bearer': 'sample_bearer_token',
+        'session_id': 'sess_123456789',
+        'client_secret': 'sec_abc123',
+        'vpa': 'user@okhdfcbank',
+      };
+
+      final redacted = BharatPiiRedactor.redactMap(data);
+      expect(redacted['jwt'], '[REDACTED]');
+      expect(redacted['bearer'], '[REDACTED]');
+      expect(redacted['session_id'], '[REDACTED]');
+      expect(redacted['client_secret'], '[REDACTED]');
+      expect(redacted['vpa'], '[REDACTED]');
+    });
+
+    test('resolves newly supported UPI handles (FamPay, Navi, Airtel)', () {
+      final fam = BharatUpi.validate('nithin@fam');
+      expect(fam.isValid, isTrue);
+      expect(fam.pspName, 'FamPay');
+
+      final navi = BharatUpi.validate('test@navi');
+      expect(navi.isValid, isTrue);
+      expect(navi.pspName, 'Navi');
+
+      final airtel = BharatUpi.validate('user@airtel');
+      expect(airtel.isValid, isTrue);
+      expect(airtel.pspName, 'Airtel Payments Bank');
+    });
+
+    test('rejects malicious schemes in UPI Intent URL', () {
+      final res = BharatUpiIntent.validate(
+          'upi://pay?pa=merchant@okaxis&pn=Merchant&url=vbscript:alert(1)');
+      expect(res.isValid, isFalse);
+      expect(res.errorMessage, contains('Malicious URI scheme detected'));
+
+      final resBlob = BharatUpiIntent.validate(
+          'upi://pay?pa=merchant@okaxis&pn=Merchant&url=blob:http://evil.com');
+      expect(resBlob.isValid, isFalse);
+
+      final resIntent = BharatUpiIntent.validate(
+          'upi://pay?pa=merchant@okaxis&pn=Merchant&url=intent://evil#Intent');
+      expect(resIntent.isValid, isFalse);
+    });
+
+    test('rejects bank account numbers with repetitive dummy digits', () {
+      final zeroes = BharatBankAccount.validate('00000000000');
+      expect(zeroes.isValid, isFalse);
+      expect(zeroes.errorMessage,
+          contains('cannot consist entirely of repeated digits'));
+
+      final ones = BharatBankAccount.validate('111111111111');
+      expect(ones.isValid, isFalse);
+
+      final valid = BharatBankAccount.validate('50100123456789');
+      expect(valid.isValid, isTrue);
+    });
+
+    test('sanitizes formatted account numbers before masking', () {
+      expect(BharatBankAccount.mask('1234-5678-9012'), 'XXXXXXXX9012');
+      expect(BharatBankAccount.mask('1234 5678 9012'), 'XXXXXXXX9012');
+    });
   });
 }

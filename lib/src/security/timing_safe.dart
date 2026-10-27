@@ -14,18 +14,15 @@ class TimingSafe {
       return a == b;
     }
 
-    final codeUnitsA = a.codeUnits;
-    final codeUnitsB = b.codeUnits;
+    final lenA = a.length;
+    final lenB = b.length;
+    int diff = lenA ^ lenB;
+    final maxLen = lenA > lenB ? lenA : lenB;
 
-    // If lengths differ, we still iterate through one of them to avoid
-    // an early exit that reveals length directly without dummy cycles.
-    int diff = codeUnitsA.length ^ codeUnitsB.length;
-    final minLength = codeUnitsA.length < codeUnitsB.length
-        ? codeUnitsA.length
-        : codeUnitsB.length;
-
-    for (int i = 0; i < minLength; i++) {
-      diff |= codeUnitsA[i] ^ codeUnitsB[i];
+    for (int i = 0; i < maxLen; i++) {
+      final ca = i < lenA ? a.codeUnitAt(i) : 0;
+      final cb = i < lenB ? b.codeUnitAt(i) : 0;
+      diff |= ca ^ cb;
     }
 
     return diff == 0;
@@ -39,11 +36,15 @@ class TimingSafe {
       return a == b;
     }
 
-    int diff = a.length ^ b.length;
-    final minLength = a.length < b.length ? a.length : b.length;
+    final lenA = a.length;
+    final lenB = b.length;
+    int diff = lenA ^ lenB;
+    final maxLen = lenA > lenB ? lenA : lenB;
 
-    for (int i = 0; i < minLength; i++) {
-      diff |= a[i] ^ b[i];
+    for (int i = 0; i < maxLen; i++) {
+      final byteA = i < lenA ? a[i] : 0;
+      final byteB = i < lenB ? b[i] : 0;
+      diff |= byteA ^ byteB;
     }
 
     return diff == 0;

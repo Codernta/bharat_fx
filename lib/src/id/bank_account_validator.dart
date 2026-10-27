@@ -83,6 +83,15 @@ class BharatBankAccount {
       );
     }
 
+    if (_isRepeatedDigits(digits)) {
+      return BankAccountValidationResult(
+        accountNumber: digits,
+        isValid: false,
+        errorMessage:
+            'Invalid bank account number: cannot consist entirely of repeated digits',
+      );
+    }
+
     if (bankCode != null && bankCode.trim().isNotEmpty) {
       final code = bankCode.trim().toUpperCase();
       final allowedLengths = _bankLengths[code];
@@ -122,7 +131,7 @@ class BharatBankAccount {
     String maskChar = 'X',
     int visibleDigits = 4,
   }) {
-    final digits = accountNumber.replaceAll(_whitespaceRegex, '');
+    final digits = accountNumber.replaceAll(RegExp(r'\D'), '');
     if (digits.length <= visibleDigits) return accountNumber;
 
     final maskedLength = digits.length - visibleDigits;
@@ -137,5 +146,14 @@ class BharatBankAccount {
     final a = account.trim().replaceAll(_whitespaceRegex, '');
     final b = confirmAccount.trim().replaceAll(_whitespaceRegex, '');
     return TimingSafe.equals(a, b);
+  }
+
+  static bool _isRepeatedDigits(String s) {
+    if (s.isEmpty) return false;
+    final first = s.codeUnitAt(0);
+    for (int i = 1; i < s.length; i++) {
+      if (s.codeUnitAt(i) != first) return false;
+    }
+    return true;
   }
 }

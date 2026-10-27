@@ -88,6 +88,11 @@ class BharatSecurity {
   static AntiBruteForceGuard createRateLimiter({
     int maxAttempts = 5,
     Duration window = const Duration(minutes: 5),
+    int maxTrackedKeys = 10000,
   }) =>
-      AntiBruteForceGuard(maxAttempts: maxAttempts, window: window);
+      AntiBruteForceGuard(
+        maxAttempts: maxAttempts,
+        window: window,
+        maxTrackedKeys: maxTrackedKeys,
+      );
 }

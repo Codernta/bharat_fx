@@ -198,7 +198,12 @@ class BharatUpiIntent {
       final refLower = refUrl.toLowerCase();
       if (refLower.startsWith('javascript:') ||
           refLower.startsWith('data:') ||
-          refLower.startsWith('file:')) {
+          refLower.startsWith('file:') ||
+          refLower.startsWith('vbscript:') ||
+          refLower.startsWith('blob:') ||
+          refLower.startsWith('about:') ||
+          refLower.startsWith('content:') ||
+          refLower.startsWith('intent:')) {
         return UpiIntentValidationResult(
           rawUri: trimmed,
           isValid: false,
