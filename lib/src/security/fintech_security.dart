@@ -21,6 +21,10 @@ class BharatSecurity {
   /// Compares two strings in constant time to prevent timing side-channel attacks.
   static bool timingSafeEquals(String? a, String? b) => TimingSafe.equals(a, b);
 
+  /// Compares two strings in constant time ignoring ASCII case without heap allocation.
+  static bool timingSafeEqualsCaseInsensitive(String? a, String? b) =>
+      TimingSafe.equalsCaseInsensitive(a, b);
+
   /// Compares two byte buffers in constant time.
   static bool timingSafeBytesEquals(List<int>? a, List<int>? b) =>
       TimingSafe.bytesEquals(a, b);

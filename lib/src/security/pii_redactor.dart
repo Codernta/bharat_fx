@@ -18,6 +18,11 @@ class BharatPiiRedactor {
     r'\b([2-9][0-9]{3})[\s\-]?([0-9]{4})[\s\-]?([0-9]{4})[\s\-]?([0-9]{4})\b',
   );
 
+  // Regex for 14-digit ABHA Number (Ayushman Bharat Health Account)
+  static final RegExp _abhaRegex = RegExp(
+    r'\b([2-9][0-9])[\s\-]?([0-9]{4})[\s\-]?([0-9]{4})[\s\-]?([0-9]{4})\b',
+  );
+
   // Regex for Indian PAN Card (5 letters, 4 digits, 1 letter)
   static final RegExp _panRegex = RegExp(
     r'\b([A-Z]{5})([0-9]{4})([A-Z])\b',
@@ -104,6 +109,16 @@ class BharatPiiRedactor {
     'din',
     'vpa',
     'irn',
+    'abha',
+    'abha_id',
+    'abha_number',
+    'ckyc',
+    'kin',
+    'lei',
+    'upi_pin',
+    'passphrase',
+    'api_secret',
+    'signing_key',
   };
 
   /// Redacts all financial PII from arbitrary text, logs, or error strings.
@@ -148,7 +163,13 @@ class BharatPiiRedactor {
       return match.group(0)!;
     });
 
-    // 4. Redact 12-digit Aadhaar numbers
+    // 4. Redact 14-digit ABHA Numbers (Ayushman Bharat Health Account)
+    sanitized = sanitized.replaceAllMapped(_abhaRegex, (match) {
+      final p4 = match.group(4)!;
+      return '${maskChar * 2}-${maskChar * 4}-${maskChar * 4}-$p4';
+    });
+
+    // 5. Redact 12-digit Aadhaar numbers
     sanitized = sanitized.replaceAllMapped(_aadhaarRegex, (match) {
       final p1 = match.group(1)!;
       final p2 = match.group(2)!;
@@ -161,7 +182,7 @@ class BharatPiiRedactor {
       return match.group(0)!;
     });
 
-    // 5. Redact Payment Cards (Luhn validated or structured card numbers)
+    // 6. Redact Payment Cards (Luhn validated or structured card numbers)
     sanitized = sanitized.replaceAllMapped(_cardRegex, (match) {
       final raw = match.group(0)!;
       final cleanDigits = raw.replaceAll(_nonDigitsRegex, '');
@@ -204,6 +225,31 @@ class BharatPiiRedactor {
     return sanitized;
   }
 
+  static bool _isKeySensitive(String lowerKey) {
+    if (_sensitiveKeys.contains(lowerKey)) return true;
+
+    for (final s in _sensitiveKeys) {
+      if (s.length <= 3) {
+        // For short tokens (e.g. iv, pin, cvv, otp, jwt, cin, tan, din, vpa, kin, lei),
+        // match exact word/token segments separated by underscores, hyphens, or dots
+        if (lowerKey == s ||
+            lowerKey.startsWith('${s}_') ||
+            lowerKey.startsWith('$s-') ||
+            lowerKey.endsWith('_$s') ||
+            lowerKey.endsWith('-$s') ||
+            lowerKey.contains('_${s}_') ||
+            lowerKey.contains('-$s-')) {
+          return true;
+        }
+      } else {
+        if (lowerKey.contains(s)) {
+          return true;
+        }
+      }
+    }
+    return false;
+  }
+
   /// Recursively scrubs all sensitive keys and values from a JSON / Map structure.
   ///
   /// Prevents accidental data leaks when sending events to Sentry, Firebase, or analytics.
@@ -217,8 +263,7 @@ class BharatPiiRedactor {
       final key = entry.key;
       final value = entry.value;
 
-      final isKeySensitive = _sensitiveKeys.contains(key.toLowerCase()) ||
-          _sensitiveKeys.any((s) => key.toLowerCase().contains(s));
+      final isKeySensitive = _isKeySensitive(key.toLowerCase());
 
       if (isKeySensitive) {
         sanitized[key] = '[REDACTED]';

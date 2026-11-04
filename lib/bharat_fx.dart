@@ -55,15 +55,18 @@ export 'src/vehicle/vehicle_validator.dart';
 
 // Government IDs, Payments, Banking & Identity Module
 export 'src/id/aadhaar_validator.dart';
+export 'src/id/abha_validator.dart';
 export 'src/id/bank_account_validator.dart';
 export 'src/id/bharat_id.dart';
 export 'src/id/card_token.dart';
 export 'src/id/card_validator.dart';
+export 'src/id/ckyc_validator.dart';
 export 'src/id/corporate_id_validator.dart';
 export 'src/id/driving_license_validator.dart';
 export 'src/id/gstin_validator.dart';
 export 'src/id/id_formatters.dart';
 export 'src/id/ifsc_validator.dart';
+export 'src/id/lei_validator.dart';
 export 'src/id/pan_validator.dart';
 export 'src/id/passport_validator.dart';
 export 'src/id/phone_validator.dart';

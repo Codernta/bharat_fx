@@ -3,13 +3,16 @@ import 'package:flutter/services.dart';
 import '../currency/bharat_currency.dart';
 import '../currency/bharat_money.dart';
 import '../id/aadhaar_validator.dart';
+import '../id/abha_validator.dart';
 import '../id/bank_account_validator.dart';
 import '../id/card_validator.dart';
+import '../id/ckyc_validator.dart';
 import '../id/corporate_id_validator.dart';
 import '../id/driving_license_validator.dart';
 import '../id/gstin_validator.dart';
 import '../id/id_formatters.dart';
 import '../id/ifsc_validator.dart';
+import '../id/lei_validator.dart';
 import '../id/pan_validator.dart';
 import '../id/passport_validator.dart';
 import '../id/phone_validator.dart';
@@ -49,6 +52,9 @@ enum BharatTextFieldType {
   cin,
   tan,
   din,
+  abha,
+  ckyc,
+  lei,
   vernacularPhonetic,
   vernacularRestricted,
   custom,
@@ -79,6 +85,9 @@ class BharatTextField extends StatefulWidget {
   final ValueChanged<BharatMoney>? onMoneyResolved;
   final ValueChanged<DrivingLicenseValidationResult>? onDrivingLicenseResolved;
   final ValueChanged<CinValidationResult>? onCinResolved;
+  final ValueChanged<AbhaValidationResult>? onAbhaResolved;
+  final ValueChanged<CkycValidationResult>? onCkycResolved;
+  final ValueChanged<LeiValidationResult>? onLeiResolved;
   final bool showLiveValidationIndicator;
 
   // Fintech Security options
@@ -112,6 +121,9 @@ class BharatTextField extends StatefulWidget {
     this.onMoneyResolved,
     this.onDrivingLicenseResolved,
     this.onCinResolved,
+    this.onAbhaResolved,
+    this.onCkycResolved,
+    this.onLeiResolved,
     this.showLiveValidationIndicator = true,
     this.bankCode,
     this.obscureText,
@@ -298,6 +310,29 @@ class _BharatTextFieldState extends State<BharatTextField> {
         final dinResult = BharatDin.validate(text);
         valid = dinResult.isValid;
         break;
+      case BharatTextFieldType.abha:
+        final abhaResult = BharatAbha.validate(text);
+        valid = abhaResult.isValid;
+        if (valid) {
+          helper = 'ABHA ID: ${abhaResult.formattedNumber}';
+          widget.onAbhaResolved?.call(abhaResult);
+        }
+        break;
+      case BharatTextFieldType.ckyc:
+        final ckycResult = BharatCkyc.validate(text);
+        valid = ckycResult.isValid;
+        if (valid) {
+          widget.onCkycResolved?.call(ckycResult);
+        }
+        break;
+      case BharatTextFieldType.lei:
+        final leiResult = BharatLei.validate(text);
+        valid = leiResult.isValid;
+        if (valid) {
+          helper = leiResult.louName;
+          widget.onLeiResolved?.call(leiResult);
+        }
+        break;
       case BharatTextFieldType.vernacularPhonetic:
       case BharatTextFieldType.vernacularRestricted:
       case BharatTextFieldType.custom:
@@ -324,6 +359,8 @@ class _BharatTextFieldState extends State<BharatTextField> {
       BharatTextFieldType.card => false,
       BharatTextFieldType.cvv => false,
       BharatTextFieldType.bankAccount => false,
+      BharatTextFieldType.abha => false,
+      BharatTextFieldType.ckyc => false,
       _ => true,
     };
   }
@@ -355,6 +392,9 @@ class _BharatTextFieldState extends State<BharatTextField> {
       BharatTextFieldType.cin => false,
       BharatTextFieldType.tan => false,
       BharatTextFieldType.din => false,
+      BharatTextFieldType.abha => false,
+      BharatTextFieldType.ckyc => false,
+      BharatTextFieldType.lei => false,
       _ => true,
     };
   }
@@ -377,6 +417,9 @@ class _BharatTextFieldState extends State<BharatTextField> {
       BharatTextFieldType.cin => false,
       BharatTextFieldType.tan => false,
       BharatTextFieldType.din => false,
+      BharatTextFieldType.abha => false,
+      BharatTextFieldType.ckyc => false,
+      BharatTextFieldType.lei => false,
       _ => true,
     };
   }
@@ -583,6 +626,33 @@ class _BharatTextFieldState extends State<BharatTextField> {
         prefixIcon = const Icon(Icons.person_pin_outlined);
         break;
 
+      case BharatTextFieldType.abha:
+        keyboardType = TextInputType.number;
+        formatters = [
+          FilteringTextInputFormatter.digitsOnly,
+          const BharatAbhaInputFormatter(),
+        ];
+        label = 'ABHA Number (Health ID)';
+        hint = 'XX-XXXX-XXXX-XXXX';
+        prefixIcon = const Icon(Icons.health_and_safety_outlined);
+        break;
+
+      case BharatTextFieldType.ckyc:
+        keyboardType = TextInputType.text;
+        formatters = const [BharatCkycInputFormatter()];
+        label = 'CKYC / KIN Number';
+        hint = '14-digit/char CKYC';
+        prefixIcon = const Icon(Icons.verified_user_outlined);
+        break;
+
+      case BharatTextFieldType.lei:
+        keyboardType = TextInputType.text;
+        formatters = const [BharatLeiInputFormatter()];
+        label = 'Legal Entity Identifier (LEI)';
+        hint = '20-character LEI';
+        prefixIcon = const Icon(Icons.business_outlined);
+        break;
+
       case BharatTextFieldType.vernacularPhonetic:
         keyboardType = TextInputType.text;
         formatters = [
@@ -741,6 +811,15 @@ class _BharatTextFieldState extends State<BharatTextField> {
         case BharatTextFieldType.din:
           final din = BharatDin.validate(value);
           return din.isValid ? null : din.errorMessage;
+        case BharatTextFieldType.abha:
+          final abha = BharatAbha.validate(value);
+          return abha.isValid ? null : abha.errorMessage;
+        case BharatTextFieldType.ckyc:
+          final ckyc = BharatCkyc.validate(value);
+          return ckyc.isValid ? null : ckyc.errorMessage;
+        case BharatTextFieldType.lei:
+          final lei = BharatLei.validate(value);
+          return lei.isValid ? null : lei.errorMessage;
         case BharatTextFieldType.vernacularPhonetic:
         case BharatTextFieldType.vernacularRestricted:
         case BharatTextFieldType.custom:

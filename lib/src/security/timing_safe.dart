@@ -28,6 +28,32 @@ class TimingSafe {
     return diff == 0;
   }
 
+  /// Compares two strings in constant time relative to their length, ignoring ASCII case,
+  /// without allocating intermediate `.toLowerCase()` or `.toUpperCase()` string copies on the heap.
+  static bool equalsCaseInsensitive(String? a, String? b) {
+    if (a == null || b == null) {
+      return a == b;
+    }
+
+    final lenA = a.length;
+    final lenB = b.length;
+    int diff = lenA ^ lenB;
+    final maxLen = lenA > lenB ? lenA : lenB;
+
+    for (int i = 0; i < maxLen; i++) {
+      int ca = i < lenA ? a.codeUnitAt(i) : 0;
+      int cb = i < lenB ? b.codeUnitAt(i) : 0;
+
+      // Constant-time ASCII uppercase to lowercase folding (A-Z: 0x41-0x5A)
+      if (ca >= 65 && ca <= 90) ca |= 0x20;
+      if (cb >= 65 && cb <= 90) cb |= 0x20;
+
+      diff |= ca ^ cb;
+    }
+
+    return diff == 0;
+  }
+
   /// Compares two byte lists in constant time relative to their length.
   ///
   /// Essential for verifying HMAC-SHA256 signatures, hashes, and token digests.

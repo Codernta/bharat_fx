@@ -1,5 +1,46 @@
 # Changelog
 
+## 1.0.8
+
+* **🩺 Ayushman Bharat Health Account & Digital Health (`BharatAbha`)**:
+  * **14-Digit ABHA ID Validation & Masking**:
+    * Strictly validates 14-digit National Health Authority (NHA) & Ayushman Bharat Digital Mission (ABDM) health identifier numbers (`^[2-9][0-9]{13}$`), disallowing invalid leading 0 or 1 digits.
+    * Formats into standard 4-group notation (`XX-XXXX-XXXX-XXXX`) and masks for DPDP compliance (`XX-XXXX-XXXX-1234`).
+    * Added dedicated `BharatAbhaInputFormatter` with auto-hyphenation.
+  * **ABHA Address / PHR Handle Validation**:
+    * Validates user health address handles (e.g. `user@abdm`, `rahul.kumar@sbx`) with Unicode homoglyph defense.
+* **🪪 Central KYC Registry Identification (`BharatCkyc`)**:
+  * **CKYC / KIN Validation & Masking**:
+    * Validates 14-character alphanumeric Central KYC registry identifiers managed by CERSAI across RBI, SEBI, IRDAI, and PFRDA institutions.
+    * Differentiates numeric-only CKYC from alphanumeric KIN entities.
+    * Privacy-compliant masking (`XXXXXXXXXX1234`) and dedicated `BharatCkycInputFormatter`.
+* **🏛️ RBI Legal Entity Identifier (`BharatLei`)**:
+  * **20-Character ISO 17442 LEI Engine**:
+    * Validates mandatory 20-character LEI codes enforced by the Reserve Bank of India (RBI) for transactions $\ge$ ₹50 Crore via NEFT/RTGS and cross-border commercial transactions.
+    * **Zero-Allocation ISO 7064 Mod 97-10 Checksum Algorithm**: Implemented high-performance streaming checksum evaluation without intermediate heap allocations or string conversions.
+    * Added `calculateCheckDigits` utility to derive standard 2-digit check digits from 18-character roots.
+    * Built-in Local Operating Unit (LOU) resolver (e.g. `3358` -> Legal Entity Identifier India Ltd - LEIL).
+    * Added dedicated `BharatLeiInputFormatter` and masking (`3358XXXXXXXXXXXX1234`).
+* **🔒 Fintech Security Hardening & Zero-Allocation Optimizations**:
+  * **Zero-Allocation Case-Insensitive Timing-Safe Equality (`TimingSafe.equalsCaseInsensitive`)**:
+    * Added constant-time ASCII equality comparison that folds `A-Z` to `a-z` on-the-fly without allocating intermediate `.toLowerCase()` or `.toUpperCase()` strings on the heap.
+  * **Optimized Hex Encoding & Checksum Verification (`BharatHash`)**:
+    * Optimized `_bytesToHex` using static ASCII lookup tables, eliminating 64 short-lived heap allocations on every SHA-256 and HMAC-SHA256 calculation.
+    * Upgraded `BharatHash.verifyChecksum` to use `TimingSafe.equalsCaseInsensitive`, preventing timing attacks while eliminating heap string allocations.
+  * **UPI Deep-Link Tampering & Parameter Pollution Guard (`BharatUpiIntent`)**:
+    * Hardened `BharatUpiIntent.validate` against HTTP Parameter Pollution (HPP) and CRLF / control character injection (`\r`, `\n`, `\0`) in transaction reference (`tr`) and transaction note (`tn`) fields.
+  * **Precise Key & PII Redaction (`BharatPiiRedactor`)**:
+    * Added token-boundary matching for short sensitive keys (`iv`, `pin`, `jwt`, `kin`, `lei`, etc.) to eliminate false-positive redaction on normal dictionary words (`delivery`, `native`, `activity`).
+    * Added sensitive key dictionary scrubbing for `abha`, `abha_id`, `abha_number`, `ckyc`, `kin`, `lei`, `upi_pin`, `passphrase`, `api_secret`, `signing_key`.
+    * Added automatic text redaction pattern for 14-digit ABHA numbers in logs and error strings.
+* **🛡️ Batteries-Included Fintech Input Field (`BharatTextField`)**:
+  * Added `BharatTextFieldType.abha`, `BharatTextFieldType.ckyc`, and `BharatTextFieldType.lei` presets.
+  * Automatic clipboard protection, cloud prediction keyboard suppression, and autocorrect prevention.
+  * Added resolver callbacks: `onAbhaResolved`, `onCkycResolved`, `onLeiResolved`.
+* **💯 100% Backward Compatible & Dependency-Free**:
+  * Fully backward compatible with existing 1.0.x APIs.
+  * Zero third-party runtime dependencies.
+
 ## 1.0.7
 
 * **🔒 Security Hardening & Fintech Cryptographic Protection**:

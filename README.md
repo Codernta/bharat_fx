@@ -40,6 +40,9 @@
   - Detects defunct merged bank IFSC codes (Allahabad, Syndicate, Oriental, etc.) with migration advisories.
 - **🆔 Comprehensive Government, Identity & Corporate IDs (`BharatId`)**:
   - **UIDAI Aadhaar & Virtual ID (VID)**: 12-digit Aadhaar & 16-digit VID with official **Verhoeff checksum** and privacy masking.
+  - **Ayushman Bharat Health Account (`BharatAbha`)**: 14-digit NHA/ABDM ABHA ID validation, auto-hyphenation, privacy masking, and ABHA address handle verification with homoglyph defense.
+  - **Central KYC Registry (`BharatCkyc`)**: 14-character CKYC / KIN validation mandated by CERSAI across RBI, SEBI, IRDAI, and PFRDA entities with masking.
+  - **Legal Entity Identifier (`BharatLei`)**: 20-character ISO 17442 code mandated by RBI for large transactions ($\ge$ ₹50 Cr) with zero-allocation **ISO 7064 Mod 97-10** checksum and LOU resolver.
   - **MoRTH Driving License (`BharatDrivingLicense`)**: 15/16-char format parsing, state and RTO office lookup, issue year extraction, and auto-hyphenation.
   - **Voter ID (EPIC) & Passport (`BharatVoterId` & `BharatPassport`)**: Standard 10-char ECI Voter IDs and 8-char MEA Passports with privacy masking.
   - **Corporate & MCA Registrations (`BharatCin`, `BharatTan`, `BharatDin`)**: 21-char CIN with listing status, NIC industry, and corporate entity type; 10-char TAN; and 8-digit DIN.
@@ -60,7 +63,7 @@ Add `bharat_fx` to your `pubspec.yaml`:
 
 ```yaml
 dependencies:
-  bharat_fx: ^1.0.6
+  bharat_fx: ^1.0.8
 ```
 
 Import the package:
@@ -337,6 +340,32 @@ BharatId.validateDin("00123456"); // true
 BharatId.maskDin("00123456");     // "XXXX3456"
 ```
 
+### 9. Ayushman Bharat Health Account (ABHA), CKYC & LEI (`BharatAbha`, `BharatCkyc`, `BharatLei`)
+```dart
+// 14-Digit Ayushman Bharat Health Account (ABHA ID)
+final abha = BharatId.validateAbha("91-1234-5678-9012");
+print(abha.isValid);         // true
+print(abha.formattedNumber); // "91-1234-5678-9012"
+BharatId.maskAbha("91123456789012"); // "XX-XXXX-XXXX-9012"
+
+// ABHA Address / PHR Handle
+final phr = BharatId.validateAbhaAddress("rahul.kumar@abdm");
+print(phr.isValid);  // true
+print(phr.username); // "rahul.kumar"
+
+// 14-Character Central KYC Registry (CKYC / KIN)
+final ckyc = BharatId.validateCkyc("10023456789012");
+print(ckyc.isValid);        // true
+print(ckyc.isNumericOnly);  // true
+BharatId.maskCkyc("10023456789012"); // "XXXXXXXXXX9012"
+
+// 20-Character RBI Legal Entity Identifier (LEI) with Mod 97-10 Checksum
+final lei = BharatId.validateLei("33580012345678901234");
+print(lei.isValid); // true
+print(lei.louName); // "Legal Entity Identifier India Ltd (LEIL)"
+BharatId.maskLei("33580012345678901234"); // "3358XXXXXXXXXXXX1234"
+```
+
 ---
 
 ## 🧾 Indian GST & Tax Engine (`BharatGst`)
@@ -497,6 +526,27 @@ BharatTextField(
   type: BharatTextFieldType.cin,
   onCinResolved: (cin) {
     print("Company: ${cin.companyTypeDescription}");
+  },
+)
+
+// Ayushman Bharat Health Account (ABHA ID) field
+BharatTextField(
+  type: BharatTextFieldType.abha,
+  onAbhaResolved: (abha) {
+    print("ABHA: ${abha.formattedNumber}");
+  },
+)
+
+// Central KYC Registry (CKYC) field
+BharatTextField(
+  type: BharatTextFieldType.ckyc,
+)
+
+// Legal Entity Identifier (LEI) field
+BharatTextField(
+  type: BharatTextFieldType.lei,
+  onLeiResolved: (lei) {
+    print("LOU: ${lei.louName}");
   },
 )
 ```

@@ -415,3 +415,78 @@ class BharatDinInputFormatter extends TextInputFormatter {
     );
   }
 }
+
+/// [TextInputFormatter] for 14-digit Ayushman Bharat Health Account (ABHA ID).
+/// Automatically hyphens into `XX-XXXX-XXXX-XXXX`.
+class BharatAbhaInputFormatter extends TextInputFormatter {
+  const BharatAbhaInputFormatter();
+
+  @override
+  TextEditingValue formatEditUpdate(
+    TextEditingValue oldValue,
+    TextEditingValue newValue,
+  ) {
+    if (newValue.text.isEmpty) return newValue;
+
+    final digits = newValue.text.replaceAll(_nonDigitsRegex, '');
+    final truncated = digits.length > 14 ? digits.substring(0, 14) : digits;
+
+    final buffer = StringBuffer();
+    for (int i = 0; i < truncated.length; i++) {
+      if (i == 2 || i == 6 || i == 10) {
+        buffer.write('-');
+      }
+      buffer.write(truncated[i]);
+    }
+
+    final formatted = buffer.toString();
+    return TextEditingValue(
+      text: formatted,
+      selection: TextSelection.collapsed(offset: formatted.length),
+    );
+  }
+}
+
+/// [TextInputFormatter] for Central KYC (CKYC / KIN) (max 14 alphanumeric, uppercase).
+class BharatCkycInputFormatter extends TextInputFormatter {
+  const BharatCkycInputFormatter();
+
+  @override
+  TextEditingValue formatEditUpdate(
+    TextEditingValue oldValue,
+    TextEditingValue newValue,
+  ) {
+    if (newValue.text.isEmpty) return newValue;
+
+    final clean =
+        newValue.text.toUpperCase().replaceAll(_nonAlphanumericRegex, '');
+    final truncated = clean.length > 14 ? clean.substring(0, 14) : clean;
+
+    return TextEditingValue(
+      text: truncated,
+      selection: TextSelection.collapsed(offset: truncated.length),
+    );
+  }
+}
+
+/// [TextInputFormatter] for Legal Entity Identifier (LEI) (max 20 alphanumeric, uppercase).
+class BharatLeiInputFormatter extends TextInputFormatter {
+  const BharatLeiInputFormatter();
+
+  @override
+  TextEditingValue formatEditUpdate(
+    TextEditingValue oldValue,
+    TextEditingValue newValue,
+  ) {
+    if (newValue.text.isEmpty) return newValue;
+
+    final clean =
+        newValue.text.toUpperCase().replaceAll(_nonAlphanumericRegex, '');
+    final truncated = clean.length > 20 ? clean.substring(0, 20) : clean;
+
+    return TextEditingValue(
+      text: truncated,
+      selection: TextSelection.collapsed(offset: truncated.length),
+    );
+  }
+}

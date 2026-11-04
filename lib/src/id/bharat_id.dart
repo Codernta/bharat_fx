@@ -1,10 +1,13 @@
 import 'aadhaar_validator.dart';
+import 'abha_validator.dart';
 import 'bank_account_validator.dart';
 import 'card_validator.dart';
+import 'ckyc_validator.dart';
 import 'corporate_id_validator.dart';
 import 'driving_license_validator.dart';
 import 'gstin_validator.dart';
 import 'ifsc_validator.dart';
+import 'lei_validator.dart';
 import 'pan_validator.dart';
 import 'passport_validator.dart';
 import 'phone_validator.dart';
@@ -171,4 +174,35 @@ class BharatId {
   /// Masks a Director Identification Number (DIN), showing only the last 4 digits.
   static String maskDin(String din, {String maskChar = 'X'}) =>
       BharatDin.mask(din, maskChar: maskChar);
+
+  /// Validates a 14-digit Ayushman Bharat Health Account (ABHA) number.
+  static AbhaValidationResult validateAbha(String? abha) =>
+      BharatAbha.validate(abha);
+
+  /// Masks an ABHA number to `XX-XXXX-XXXX-1234`.
+  static String maskAbha(String abha, {String maskChar = 'X'}) =>
+      BharatAbha.mask(abha, maskChar: maskChar);
+
+  /// Formats an ABHA number to `XX-XXXX-XXXX-XXXX`.
+  static String formatAbha(String abha) => BharatAbha.format(abha);
+
+  /// Validates an Ayushman Bharat Health Account Address (PHR handle).
+  static AbhaAddressValidationResult validateAbhaAddress(String? address) =>
+      BharatAbha.validateAddress(address);
+
+  /// Validates a 14-character Central KYC (CKYC / KIN) identifier.
+  static CkycValidationResult validateCkyc(String? ckyc) =>
+      BharatCkyc.validate(ckyc);
+
+  /// Masks a Central KYC (CKYC / KIN) identifier, showing only the last 4 characters.
+  static String maskCkyc(String ckyc, {String maskChar = 'X'}) =>
+      BharatCkyc.mask(ckyc, maskChar: maskChar);
+
+  /// Validates a 20-character ISO 17442 Legal Entity Identifier (LEI) with Mod 97-10 checksum.
+  static LeiValidationResult validateLei(String? lei) =>
+      BharatLei.validate(lei);
+
+  /// Masks a Legal Entity Identifier (LEI), preserving LOU prefix and last 4 characters.
+  static String maskLei(String lei, {String maskChar = 'X'}) =>
+      BharatLei.mask(lei, maskChar: maskChar);
 }

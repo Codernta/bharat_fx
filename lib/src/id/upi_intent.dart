@@ -40,6 +40,10 @@ class UpiIntentValidationResult {
 /// tamper-detection guard, and secure URI generator.
 class BharatUpiIntent {
   static final RegExp _fourDigitsRegex = RegExp(r'^\d{4}$');
+  static final RegExp _controlCharRegex =
+      RegExp(r'[\r\n\x00-\x08\x0B\x0C\x0E-\x1F\x7F]');
+
+  static bool _hasControlCharacters(String s) => _controlCharRegex.hasMatch(s);
 
   /// Standard NPCI transaction amount limits (INR).
   static const double standardTransactionLimit = 100000.0; // ₹1 Lakh
@@ -212,6 +216,31 @@ class BharatUpiIntent {
           errorMessage: 'Malicious URI scheme detected in "url" parameter',
         );
       }
+    }
+
+    // Transaction Reference and Note security checks (CRLF & control character injection)
+    final tr = params['tr'];
+    if (tr != null && _hasControlCharacters(tr)) {
+      return UpiIntentValidationResult(
+        rawUri: trimmed,
+        isValid: false,
+        payeeAddress: pa,
+        payeeName: pn,
+        errorMessage:
+            'Security Alert: Control characters or CRLF detected in "tr" (Transaction Ref)',
+      );
+    }
+
+    final tn = params['tn'];
+    if (tn != null && _hasControlCharacters(tn)) {
+      return UpiIntentValidationResult(
+        rawUri: trimmed,
+        isValid: false,
+        payeeAddress: pa,
+        payeeName: pn,
+        errorMessage:
+            'Security Alert: Control characters or CRLF detected in "tn" (Transaction Note)',
+      );
     }
 
     // Merchant Category Code (mc)

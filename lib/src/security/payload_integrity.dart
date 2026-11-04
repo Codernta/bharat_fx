@@ -272,16 +272,20 @@ class BharatHash {
     String expectedChecksum,
   ) {
     final computed = generateChecksum(params, secretKey);
-    return TimingSafe.equals(
-      computed.toLowerCase(),
-      expectedChecksum.toLowerCase().trim(),
+    return TimingSafe.equalsCaseInsensitive(
+      computed,
+      expectedChecksum.trim(),
     );
   }
 
+  static const _hexChars = '0123456789abcdef';
+
   static String _bytesToHex(List<int> bytes) {
     final buffer = StringBuffer();
-    for (final b in bytes) {
-      buffer.write(b.toRadixString(16).padLeft(2, '0'));
+    for (int i = 0; i < bytes.length; i++) {
+      final b = bytes[i];
+      buffer.write(_hexChars[(b >> 4) & 0x0F]);
+      buffer.write(_hexChars[b & 0x0F]);
     }
     return buffer.toString();
   }
